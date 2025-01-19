@@ -3,5 +3,37 @@
     <div class="header-container">
       <img src="/assets/img/logo.png" alt="Logo" />
     </div>
+    <div>
+      <div>
+        <h1>Einloggen</h1>
+        <form (ngSubmit)="this.login()">
+          <div>
+            <div>
+              <div>
+                <input
+                  [(ngModel)]="this.emailOrUsername"
+                  name="emailOrUsername"
+                  class="email-input"
+                  type="email"
+                  placeholder="beispielname@email.com"
+                />
+              </div>
+            </div>
+            <div>
+              <div>
+                <input
+                  [(ngModel)]="this.password"
+                  name="password"
+                  type="password"
+                  placeholder="Passwort"
+                />
+              </div>
+              <p *ngIf="this.wrongData">{{ this.wrongData }}</p>
+            </div>
+          </div>
+          <button type="submit">Anmelden</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
