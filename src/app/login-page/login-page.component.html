@@ -3,36 +3,61 @@
     <div class="header-container">
       <img src="/assets/img/logo.png" alt="Logo" />
     </div>
-    <div>
-      <div>
+    <div class="login-content-container">
+      <div class="login-card-container">
         <h1>Einloggen</h1>
-        <form (ngSubmit)="this.login()">
+        <form class="login-card-form" (ngSubmit)="this.login()">
           <div>
             <div>
               <div>
                 <input
-                  [(ngModel)]="this.emailOrUsername"
+                  (click)="this.resetErrorEmailOrUsername()"
+                  type="text"
+                  placeholder="E-Mail oder Benutzername"
                   name="emailOrUsername"
-                  class="email-input"
-                  type="email"
-                  placeholder="beispielname@email.com"
+                  [(ngModel)]="emailOrUsername"
+                  [class.error]="this.emptyEmailOrUsername && !emailOrUsername"
                 />
+                <p class="error-text-input" *ngIf="this.emptyEmailOrUsername">
+                  Bitte geben Sie eine gültige E-Mail-Adresse oder Benutzername
+                  ein.
+                </p>
               </div>
             </div>
             <div>
               <div>
                 <input
-                  [(ngModel)]="this.password"
-                  name="password"
+                  (click)="this.resetErrorPassword()"
                   type="password"
                   placeholder="Passwort"
+                  name="password"
+                  [(ngModel)]="password"
+                  [class.error]="this.emptyPassword && !password"
                 />
+                <p class="error-text-input" *ngIf="this.emptyPassword">
+                  Bitte geben Sie eine gültiges Passwort ein.
+                </p>
               </div>
-              <p *ngIf="this.wrongData">{{ this.wrongData }}</p>
             </div>
           </div>
-          <button type="submit">Anmelden</button>
+          <button class="submit-button" type="submit">Anmelden</button>
         </form>
+        <p class="error-text-input" *ngIf="this.wrongData">
+          {{ this.wrongData }}
+        </p>
+        <div class="reset-password-container">
+          <p>Passwort vergessen?</p>
+        </div>
+        <div class="checkbox-container" (click)="this.toggleRememberMe()">
+          <div class="checkbox" [class.checked]="rememberMe">
+            <span *ngIf="rememberMe" class="checkmark">✔</span>
+          </div>
+          <label>Login-Daten speichern</label>
+        </div>
+        <div class="login-register-container">
+          <p class="login-register-text">Neu bei Videoflix?</p>
+          <p class="login-register-link-text">Jetzt registrieren</p>
+        </div>
       </div>
     </div>
   </div>

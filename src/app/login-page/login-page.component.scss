@@ -1,3 +1,5 @@
+@import "./../../styles.scss";
+
 .login-container {
   background-image: url("../../assets/img/background_login.jpg");
   background-size: cover;
@@ -8,6 +10,7 @@
   display: flex;
   justify-content: center;
   opacity: 0.9;
+  color: $white;
 }
 
 .login-content {
@@ -17,4 +20,174 @@
 
 .header-container {
   margin-top: 24px;
+}
+
+.login-content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-height: 800px;
+  margin-top: 80px;
+}
+
+.login-card-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  max-width: 450px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  > form {
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+}
+
+input {
+  border: 2px solid $white;
+  border-radius: 8px;
+  color: $white;
+  background-color: transparent;
+  padding: 10px;
+  outline: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+  width: 420px;
+  height: 40px;
+  font-size: 18px;
+  padding-left: 12px;
+  margin-top: 12px;
+
+  &::placeholder {
+    color: rgba($white, 0.4);
+  }
+
+  &:focus {
+    border-color: lighten($white, 20%);
+  }
+}
+
+input.error {
+  border-color: $red;
+  color: $red;
+
+  &::placeholder {
+    color: rgba($red, 0.7);
+  }
+}
+
+.error-text-input {
+  color: $red;
+  font-size: 14px;
+}
+
+.submit-button {
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  appearance: none;
+  padding: 18px;
+  margin: 0;
+  margin-top: 24px;
+  color: $white;
+  background-color: $red;
+  width: 445px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.submit-button:hover {
+  background-color: rgba($red, 0.7);
+}
+
+.reset-password-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  > p {
+    font-size: 18px;
+  }
+}
+
+.reset-password-container:hover {
+  text-decoration: underline;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba($white, 0.6);
+  background-color: $black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.checkbox:hover {
+  border: 2px solid $white;
+}
+
+.checkbox.checked {
+  background-color: $white;
+}
+
+.checkbox.checked .checkmark {
+  color: $black;
+}
+
+.checkmark {
+  color: $white;
+  font-size: 18px;
+}
+
+label {
+  color: $white;
+  font-size: 18px;
+}
+
+.login-register-container {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.login-register-text {
+  color: rgba($white, 0.6);
+  font-size: 18px;
+}
+
+.login-register-link-text {
+  color: $white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.login-register-link-text:hover {
+  text-decoration: underline;
 }

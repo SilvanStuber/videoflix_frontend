@@ -15,11 +15,28 @@ export class LoginPageComponent {
   emailOrUsername: string = '';
   password: string = '';
   wrongData: string | undefined;
+  emptyEmailOrUsername: boolean = false;
+  emptyPassword: boolean = false;
+  rememberMe: boolean = false;
 
 
   constructor(public dataService: DataService,) { }
 
   async login() {
+    if (!this.emailOrUsername) {
+      this.emptyEmailOrUsername = true;
+      return;
+    }
+    if (!this.password) {
+      this.emptyPassword = true;
+      return;
+    } else {
+      await this.loginOnApi();
+      this.handleLoginSuccess()
+    }
+  }
+
+  async loginOnApi() {
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}login/`, {
         method: "POST",
@@ -52,4 +69,34 @@ export class LoginPageComponent {
     }));
   }
 
+  resetErrorEmailOrUsername() {
+    this.emptyEmailOrUsername = false;
+  }
+
+  resetErrorPassword() {
+    this.emptyPassword = false;
+  }
+
+  handleLoginSuccess() {
+    if (this.rememberMe) {
+      this.saveLoginData();
+    } else {
+      this.clearLoginData();
+    }
+  }
+
+  saveLoginData() {
+    localStorage.setItem('loginData', JSON.stringify({
+      emailOrUsername: this.emailOrUsername,
+      password: this.password
+    }));
+  }
+
+  clearLoginData() {
+    localStorage.removeItem('loginData');
+  }
+
+  toggleRememberMe() {
+    this.rememberMe = !this.rememberMe;
+  }
 }
