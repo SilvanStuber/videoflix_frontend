@@ -8,7 +8,10 @@
       />
     </div>
     <div class="login-content-container">
-      <div class="login-card-container" *ngIf="this.loginPageActive">
+      <div
+        class="login-card-container"
+        *ngIf="this.dataService.loginPageActive"
+      >
         <h1>Einloggen</h1>
         <form class="login-card-form" (ngSubmit)="this.login()">
           <div>
@@ -91,7 +94,10 @@
         </div>
       </div>
 
-      <div class="login-card-container" *ngIf="this.resetPasswordPageActive">
+      <div
+        class="login-card-container"
+        *ngIf="this.dataService.resetPasswordPageActive"
+      >
         <div class="back-arrow-container">
           <img
             (click)="this.backToSigInPage()"
@@ -140,7 +146,10 @@
         </p>
       </div>
 
-      <div class="login-card-container" *ngIf="this.emailRequestHasBeenSent">
+      <div
+        class="login-card-container"
+        *ngIf="this.dataService.emailRequestHasBeenSent"
+      >
         <h1>Überprüfe deine E-Mails</h1>
         <div class="back-to-main-button-container">
           <span class="back-to-main-button" (click)="this.backToSigInPage()">
@@ -149,7 +158,10 @@
         </div>
       </div>
 
-      <div class="login-card-container" *ngIf="this.registerPageActive">
+      <div
+        class="login-card-container"
+        *ngIf="this.dataService.registerPageActive"
+      >
         <div class="back-arrow-container">
           <img
             (click)="this.backToSigInPage()"
@@ -195,7 +207,10 @@
         </p>
       </div>
 
-      <div class="login-card-container" *ngIf="this.registerPageNameActive">
+      <div
+        class="login-card-container"
+        *ngIf="this.dataService.registerPageNameActive"
+      >
         <div class="back-arrow-container">
           <img
             (click)="this.loadRegisterPage()"
@@ -270,7 +285,10 @@
         </p>
       </div>
 
-      <div class="login-card-container" *ngIf="this.registerPagePasswordActive">
+      <div
+        class="login-card-container"
+        *ngIf="this.dataService.registerPagePasswordActive"
+      >
         <div class="back-arrow-container">
           <img
             (click)="this.backNameRegisterPage()"
@@ -372,6 +390,60 @@
           {{ this.wrongData }}
         </p>
       </div>
+    </div>
+    <div
+      class="imprint-privacy-policy-card-container"
+      *ngIf="
+        this.dataService.imprintPagePasswordActive ||
+        this.dataService.privacyPolicyPagePasswordActive
+      "
+    >
+      <div
+        [ngClass]="{
+          'imprint-card-content': dataService.imprintPagePasswordActive,
+          'privacy-policy-card-content':
+            dataService.privacyPolicyPagePasswordActive
+        }"
+      >
+        <div
+          *ngIf="this.dataService.imprintPagePasswordActive"
+          class="imprint-container"
+        >
+          <div class="back-imprint-arrow-container">
+            <img
+              (click)="this.dataService.backToContent()"
+              src="/assets/img/arrow_left.png"
+              alt="arrow_left"
+            />
+          </div>
+          <div [innerHTML]="this.dataService.imprintContent"></div>
+        </div>
+        <div
+          *ngIf="this.dataService.privacyPolicyPagePasswordActive"
+          class="privacy-policy-container"
+        >
+          <div class="back-privacy-policy-arrow-container">
+            <img
+              (click)="this.dataService.backToContent()"
+              src="/assets/img/arrow_left.png"
+              alt="arrow_left"
+            />
+          </div>
+          <div [innerHTML]="this.dataService.privacyContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-container">
+    <div class="footer-content">
+      <p (click)="this.dataService.loadImprintPage()" class="link-footer">
+        Impressum
+      </p>
+      <p>|</p>
+      <p (click)="this.dataService.loadPrivacyPolicyPage()" class="link-footer">
+        Datenschutz
+      </p>
     </div>
   </div>
 </div>

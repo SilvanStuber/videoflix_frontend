@@ -33,12 +33,6 @@ export class LoginPageComponent {
   emptyPasswordRegister: boolean = false;
   emptyPasswordRepeatedRegister: boolean = false;
   rememberMe: boolean = false;
-  loginPageActive: boolean = true;
-  resetPasswordPageActive: boolean = false;
-  emailRequestHasBeenSent: boolean = false;
-  registerPageActive: boolean = false;
-  registerPageNameActive: boolean = false;
-  registerPagePasswordActive: boolean = false;
   isNotAnEmail: boolean = false;
   usernameHasSpecialChars: boolean = false;
   inputIsEmpty: boolean = true;
@@ -46,10 +40,11 @@ export class LoginPageComponent {
   passwordRegisterVisible: boolean = false;
   passwordRepeatedRegisterVisible: boolean = false;
 
-  constructor(public dataService: DataService,) { }
+  constructor(public dataService: DataService) { }
 
   ngOnInit() {
     this.loadLoginData();
+
   }
 
   async login() {
@@ -150,8 +145,8 @@ export class LoginPageComponent {
   }
 
   loadForgetPassword() {
-    this.resetBooleanOfContent();
-    this.resetPasswordPageActive = true;
+    this.dataService.resetBooleanOfContent();
+    this.dataService.resetPasswordPageActive = true;
     this.inputIsEmpty = true;
   }
 
@@ -187,8 +182,8 @@ export class LoginPageComponent {
         body: JSON.stringify({ email_or_username: this.emailOrUsernameForget }),
       });
       const responseData = await response.json();
-      this.resetBooleanOfContent();
-      this.emailRequestHasBeenSent = true;
+      this.dataService.resetBooleanOfContent();
+      this.dataService.emailRequestHasBeenSent = true;
       this.resetInputString();
     } catch (error) {
       this.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
@@ -201,27 +196,27 @@ export class LoginPageComponent {
     } else {
       this.inputIsEmpty = true;
     }
-    this.resetBooleanOfContent();
-    this.registerPageActive = true;
+    this.dataService.resetBooleanOfContent();
+    this.dataService.registerPageActive = true;
   }
 
   backToSigInPage() {
-    this.resetBooleanOfContent();
+    this.dataService.resetBooleanOfContent();
     this.loadLoginData();
     if (this.emailOrUsername !== '' && this.password !== '') {
       this.inputIsEmpty = false;
     } else {
       this.inputIsEmpty = true;
     }
-    this.loginPageActive = true;
+    this.dataService.loginPageActive = true;
     this.toggleRememberMe();
   }
 
   switchToNamePage() {
     this.inputIsEmpty = true;
     this.isNotAnEmail = false
-    this.resetBooleanOfContent();
-    this.registerPageNameActive = true;
+    this.dataService.resetBooleanOfContent();
+    this.dataService.registerPageNameActive = true;
   }
 
   switchToPasswordPage() {
@@ -235,8 +230,8 @@ export class LoginPageComponent {
       this.usernameHasSpecialChars = true;
     } else {
       this.inputIsEmpty = true;
-      this.resetBooleanOfContent();
-      this.registerPagePasswordActive = true;
+      this.dataService.resetBooleanOfContent();
+      this.dataService.registerPagePasswordActive = true;
     }
   }
 
@@ -320,17 +315,8 @@ export class LoginPageComponent {
     } else {
       this.inputIsEmpty = true;
     }
-    this.resetBooleanOfContent();
-    this.registerPageNameActive = true;
-  }
-
-  resetBooleanOfContent() {
-    this.loginPageActive = false;
-    this.emailRequestHasBeenSent = false;
-    this.resetPasswordPageActive = false;
-    this.registerPageActive = false;
-    this.registerPageNameActive = false;
-    this.registerPagePasswordActive = false;
+    this.dataService.resetBooleanOfContent();
+    this.dataService.registerPageNameActive = true;
   }
 
   resetInputString() {
@@ -376,8 +362,8 @@ export class LoginPageComponent {
       if (!response.ok) {
         this.wrongData = "Ein Benutzer mit diesem Benutzernamen oder E-Mail existiert bereits.";
       } else {
-        this.resetBooleanOfContent();
-        this.emailRequestHasBeenSent = true;
+        this.dataService.resetBooleanOfContent();
+        this.dataService.emailRequestHasBeenSent = true;
         this.resetInputString();
       }
     } catch (error) {
