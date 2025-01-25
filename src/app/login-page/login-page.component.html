@@ -1,17 +1,21 @@
 <div class="login-container">
   <div class="login-content">
     <div class="header-container">
-      <img src="/assets/img/logo.png" alt="Logo" />
+      <img
+        (click)="this.backToSigInPage()"
+        src="/assets/img/logo.png"
+        alt="Logo"
+      />
     </div>
     <div class="login-content-container">
-      <div class="login-card-container">
+      <div class="login-card-container" *ngIf="this.loginPageActive">
         <h1>Einloggen</h1>
         <form class="login-card-form" (ngSubmit)="this.login()">
           <div>
             <div>
               <div>
                 <input
-                  (click)="this.resetErrorEmailOrUsername()"
+                  (input)="this.resetErrorEmailOrUsername()"
                   type="text"
                   placeholder="E-Mail oder Benutzername"
                   name="emailOrUsername"
@@ -26,27 +30,52 @@
             </div>
             <div>
               <div>
-                <input
-                  (click)="this.resetErrorPassword()"
-                  type="password"
-                  placeholder="Passwort"
-                  name="password"
-                  [(ngModel)]="password"
-                  [class.error]="this.emptyPassword && !password"
-                />
+                <div class="password-container">
+                  <input
+                    (input)="this.resetErrorPassword()"
+                    [type]="passwordVisible ? 'text' : 'password'"
+                    placeholder="Passwort"
+                    name="password"
+                    [(ngModel)]="password"
+                    [class.error]="this.emptyPassword && !password"
+                  />
+                  <button
+                    type="button"
+                    (click)="this.togglePasswordVisibility()"
+                  >
+                    <img
+                      [src]="
+                        passwordVisible
+                          ? '/assets/icons/eye-slash.svg'
+                          : '/assets/icons/eye.svg'
+                      "
+                      alt="Toggle Password"
+                      class="password-icon"
+                    />
+                  </button>
+                </div>
                 <p class="error-text-input" *ngIf="this.emptyPassword">
                   Bitte geben Sie eine gültiges Passwort ein.
                 </p>
               </div>
             </div>
           </div>
-          <button class="submit-button" type="submit">Anmelden</button>
+          <button
+            [disabled]="inputIsEmpty"
+            [ngClass]="{
+              'submit-empty-button': inputIsEmpty,
+              'submit-button': !inputIsEmpty
+            }"
+            type="submit"
+          >
+            Anmelden
+          </button>
         </form>
         <p class="error-text-input" *ngIf="this.wrongData">
           {{ this.wrongData }}
         </p>
         <div class="reset-password-container">
-          <p>Passwort vergessen?</p>
+          <p (click)="this.loadForgetPassword()">Passwort vergessen?</p>
         </div>
         <div class="checkbox-container" (click)="this.toggleRememberMe()">
           <div class="checkbox" [class.checked]="rememberMe">
@@ -56,8 +85,292 @@
         </div>
         <div class="login-register-container">
           <p class="login-register-text">Neu bei Videoflix?</p>
-          <p class="login-register-link-text">Jetzt registrieren</p>
+          <p (click)="this.loadRegisterPage()" class="login-register-link-text">
+            Jetzt registrieren
+          </p>
         </div>
+      </div>
+
+      <div class="login-card-container" *ngIf="this.resetPasswordPageActive">
+        <div class="back-arrow-container">
+          <img
+            (click)="this.backToSigInPage()"
+            src="/assets/img/arrow_left.png"
+            alt="arrow_left"
+          />
+        </div>
+        <h1>Passwort zurücksetzen</h1>
+        <form class="login-card-form" (ngSubmit)="this.setForgetPassword()">
+          <div>
+            <div>
+              <div>
+                <input
+                  (input)="this.resetErrorEmailOrUsernameForget()"
+                  type="text"
+                  placeholder="E-Mail oder Benutzername"
+                  name="emailOrUsernameForget"
+                  [(ngModel)]="emailOrUsernameForget"
+                  [class.error]="
+                    this.emptyEmailOrUsernameForget && !emailOrUsernameForget
+                  "
+                />
+                <p
+                  class="error-text-input"
+                  *ngIf="this.emptyEmailOrUsernameForget"
+                >
+                  Bitte geben Sie eine gültige E-Mail-Adresse oder Benutzername
+                  ein.
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            [disabled]="inputIsEmpty"
+            [ngClass]="{
+              'submit-empty-button': inputIsEmpty,
+              'submit-button': !inputIsEmpty
+            }"
+            type="submit"
+          >
+            Passwort zurücksetzen
+          </button>
+        </form>
+        <p class="error-text-input" *ngIf="this.wrongData">
+          {{ this.wrongData }}
+        </p>
+      </div>
+
+      <div class="login-card-container" *ngIf="this.emailRequestHasBeenSent">
+        <h1>Überprüfe deine E-Mails</h1>
+        <div class="back-to-main-button-container">
+          <span class="back-to-main-button" (click)="this.backToSigInPage()">
+            Login
+          </span>
+        </div>
+      </div>
+
+      <div class="login-card-container" *ngIf="this.registerPageActive">
+        <div class="back-arrow-container">
+          <img
+            (click)="this.backToSigInPage()"
+            src="/assets/img/arrow_left.png"
+            alt="arrow_left"
+          />
+        </div>
+        <h1>Registrieren</h1>
+        <form class="login-card-form">
+          <div>
+            <div>
+              <div>
+                <input
+                  (input)="this.resetEmailEmptyError()"
+                  type="email"
+                  placeholder="E-Mail"
+                  name="email"
+                  [(ngModel)]="email"
+                  [class.error]="this.emptyEmail && !this.email"
+                />
+                <p class="error-text-input" *ngIf="this.emptyEmail">
+                  Bitte geben Sie Ihre E-Mail ein.
+                </p>
+                <p class="error-text-input" *ngIf="this.isNotAnEmail">
+                  Bitte geben Sie eine gültige E-Mail ein.
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            [disabled]="inputIsEmpty"
+            [ngClass]="{
+              'submit-empty-button': inputIsEmpty,
+              'submit-button': !inputIsEmpty
+            }"
+            (click)="this.switchToNamePage()"
+          >
+            Weiter
+          </button>
+        </form>
+        <p class="error-text-input" *ngIf="this.wrongData">
+          {{ this.wrongData }}
+        </p>
+      </div>
+
+      <div class="login-card-container" *ngIf="this.registerPageNameActive">
+        <div class="back-arrow-container">
+          <img
+            (click)="this.loadRegisterPage()"
+            src="/assets/img/arrow_left.png"
+            alt="arrow_left"
+          />
+        </div>
+        <h1>Registrieren</h1>
+        <form class="login-card-form">
+          <div>
+            <div>
+              <div>
+                <input
+                  (input)="this.resetErrorFirstName()"
+                  type="text"
+                  placeholder="Vorname"
+                  name="firstName"
+                  [(ngModel)]="firstName"
+                  [class.error]="this.emptyFirstName && !this.firstName"
+                />
+                <p class="error-text-input" *ngIf="this.emptyFirstName">
+                  Bitte geben Sie Ihren Vorname ein.
+                </p>
+              </div>
+            </div>
+            <div>
+              <div>
+                <input
+                  (input)="this.resetErrorLastName()"
+                  type="text"
+                  placeholder="Nachname"
+                  name="lastName"
+                  [(ngModel)]="lastName"
+                  [class.error]="this.emptyLastName && !this.lastName"
+                />
+                <p class="error-text-input" *ngIf="this.emptyLastName">
+                  Bitte geben Sie Ihren Nachnamen ein.
+                </p>
+              </div>
+            </div>
+            <div>
+              <input
+                (input)="this.resetErrorUsername()"
+                type="text"
+                placeholder="Benutzername"
+                name="userName"
+                [(ngModel)]="userName"
+                [class.error]="this.emptyUserName && !this.userName"
+              />
+              <p class="error-text-input" *ngIf="this.emptyUserName">
+                Bitte geben Sie einen Benutzername ein.
+              </p>
+              <p class="error-text-input" *ngIf="this.usernameHasSpecialChars">
+                Bitte geben Sie einen Benutzername ohne Sonderzeichen ein.
+              </p>
+            </div>
+          </div>
+          <button
+            (click)="this.switchToPasswordPage()"
+            [disabled]="inputIsEmpty"
+            [ngClass]="{
+              'submit-empty-button': inputIsEmpty,
+              'submit-button': !inputIsEmpty
+            }"
+            type="submit"
+          >
+            Weiter
+          </button>
+        </form>
+        <p class="error-text-input" *ngIf="this.wrongData">
+          {{ this.wrongData }}
+        </p>
+      </div>
+
+      <div class="login-card-container" *ngIf="this.registerPagePasswordActive">
+        <div class="back-arrow-container">
+          <img
+            (click)="this.backNameRegisterPage()"
+            src="/assets/img/arrow_left.png"
+            alt="arrow_left"
+          />
+        </div>
+        <h1>Registrieren</h1>
+        <form class="login-card-form" (ngSubmit)="this.register()">
+          <div>
+            <div>
+              <div>
+                <div class="password-container">
+                  <input
+                    (input)="this.resetErrorPasswordRegister()"
+                    [type]="passwordRegisterVisible ? 'text' : 'password'"
+                    placeholder="Passwort"
+                    name="password"
+                    [(ngModel)]="passwordRegister"
+                    [class.error]="
+                      this.emptyPasswordRegister && !this.passwordRegister
+                    "
+                  />
+                  <button
+                    type="button"
+                    (click)="this.togglePasswordVisibilityRegister()"
+                  >
+                    <img
+                      [src]="
+                        passwordRegisterVisible
+                          ? '/assets/icons/eye-slash.svg'
+                          : '/assets/icons/eye.svg'
+                      "
+                      alt="Toggle Password"
+                      class="password-icon"
+                    />
+                  </button>
+                  <p
+                    class="error-text-input"
+                    *ngIf="this.emptyPasswordRegister"
+                  >
+                    Bitte geben Sie eine gültiges Passwort ein.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div>
+                <div class="password-container">
+                  <input
+                    (input)="this.resetErrorPasswordRepeatedRegister()"
+                    [type]="
+                      passwordRepeatedRegisterVisible ? 'text' : 'password'
+                    "
+                    placeholder="Passwort wiederholen"
+                    name="repeatedPasswordRegister"
+                    [(ngModel)]="repeatedPasswordRegister"
+                    [class.error]="
+                      this.emptyPasswordRepeatedRegister &&
+                      !this.repeatedPasswordRegister
+                    "
+                  />
+                  <button
+                    type="button"
+                    (click)="this.togglePasswordRepeatedVisibilityRegister()"
+                  >
+                    <img
+                      [src]="
+                        passwordRepeatedRegisterVisible
+                          ? '/assets/icons/eye-slash.svg'
+                          : '/assets/icons/eye.svg'
+                      "
+                      alt="Toggle Password"
+                      class="password-icon"
+                    />
+                  </button>
+                  <p
+                    class="error-text-input"
+                    *ngIf="this.emptyPasswordRepeatedRegister"
+                  >
+                    Passwort stimmt nicht überein.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            [disabled]="inputIsEmpty"
+            [ngClass]="{
+              'submit-empty-button': inputIsEmpty,
+              'submit-button': !inputIsEmpty
+            }"
+            type="submit"
+          >
+            Registrieren
+          </button>
+        </form>
+        <p class="error-text-input" *ngIf="this.wrongData">
+          {{ this.wrongData }}
+        </p>
       </div>
     </div>
   </div>
