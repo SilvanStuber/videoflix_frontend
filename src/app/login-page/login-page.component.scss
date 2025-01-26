@@ -21,6 +21,7 @@
 .header-container {
   margin-top: 24px;
   > img {
+    height: 40px;
     cursor: pointer;
   }
 }
@@ -200,6 +201,10 @@ input.error {
   margin-top: 12px;
 }
 
+.text-privacy-policy-register {
+  font-size: 18px;
+}
+
 .privacy-policy-register-link {
   color: $red;
   cursor: pointer;
@@ -355,7 +360,8 @@ label {
   padding-right: 24px;
   padding-top: 0;
   padding-bottom: 24px;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .footer-container {
@@ -382,4 +388,176 @@ label {
 
 .link-footer {
   cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .login-card-container {
+    max-width: 350px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  input {
+    width: 312px;
+  }
+
+  .submit-button {
+    width: 338px;
+  }
+
+  .submit-empty-button {
+    width: 338px;
+  }
+
+  .back-to-main-button-container {
+    width: 338px;
+  }
+
+  .text-privacy-policy-register {
+    font-size: 12px;
+  }
+
+  .imprint-card-content {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  .back-imprint-arrow-container {
+    width: 62%;
+  }
+
+  .privacy-policy-card-content {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card-container {
+    max-width: 300px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  input {
+    width: 270px;
+    font-size: 12px;
+  }
+
+  .submit-button {
+    width: 294px;
+  }
+
+  .submit-empty-button {
+    width: 294px;
+  }
+
+  .back-to-main-button-container {
+    width: 262px;
+  }
+
+  .text-privacy-policy-register {
+    font-size: 12px;
+  }
+
+  .privacy-policy-card-content {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 20px;
+  }
+
+  .login-card-container {
+    max-width: 260px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  input {
+    width: 230px;
+    font-size: 12px;
+  }
+
+  .submit-button {
+    width: 254px;
+  }
+
+  .submit-empty-button {
+    width: 254px;
+  }
+
+  .back-to-main-button-container {
+    width: 256px;
+  }
+
+  .login-register-container {
+    > p {
+      font-size: 12px;
+    }
+  }
+
+  .reset-password-container > p {
+    font-size: 12px;
+  }
+
+  .reset-password-container:hover > p {
+    font-size: 12px;
+  }
+
+  .checkbox {
+    width: 16px;
+    height: 16px;
+  }
+
+  .checkmark {
+    font-size: 14px;
+  }
+
+  .checkbox-container {
+    > label {
+      font-size: 14px;
+    }
+  }
+
+  .back-imprint-arrow-container {
+    width: 58%;
+  }
+
+  .back-privacy-policy-arrow-container {
+    width: 88%;
+  }
+
+  .privacy-policy-card-content {
+    max-width: 260px;
+  }
+}
+
+@media (max-height: 800px) {
+  .header-container {
+    > img {
+      height: 24px;
+    }
+  }
+  .login-content-container {
+    margin-top: 12px;
+  }
+
+  .login-card-container {
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
+
+  .imprint-card-content {
+    margin-top: 80px;
+  }
+
+  .footer-container {
+    height: 64px;
+  }
+
+  .privacy-policy-card-content {
+    max-height: 500px;
+  }
 }
