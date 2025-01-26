@@ -191,6 +191,25 @@ input.error {
   cursor: pointer;
   gap: 10px;
 }
+.checkbox-register-container {
+  display: flex;
+  align-items: center;
+  flex-direction: row !important;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.privacy-policy-register-link {
+  color: $red;
+  cursor: pointer;
+  margin-left: -6px;
+  margin-right: -6px;
+}
+
+.privacy-policy-register-link:hover {
+  text-decoration: underline;
+}
 
 .checkbox {
   width: 20px;

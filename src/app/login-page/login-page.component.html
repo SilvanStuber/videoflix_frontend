@@ -21,11 +21,17 @@
                   (input)="this.resetErrorEmailOrUsername()"
                   type="text"
                   placeholder="E-Mail oder Benutzername"
-                  name="emailOrUsername"
-                  [(ngModel)]="emailOrUsername"
-                  [class.error]="this.emptyEmailOrUsername && !emailOrUsername"
+                  name="dataService.emailOrUsername"
+                  [(ngModel)]="this.dataService.emailOrUsername"
+                  [class.error]="
+                    this.dataService.emptyEmailOrUsername &&
+                    !this.dataService.emailOrUsername
+                  "
                 />
-                <p class="error-text-input" *ngIf="this.emptyEmailOrUsername">
+                <p
+                  class="error-text-input"
+                  *ngIf="this.dataService.emptyEmailOrUsername"
+                >
                   Bitte geben Sie eine gültige E-Mail-Adresse oder Benutzername
                   ein.
                 </p>
@@ -36,11 +42,16 @@
                 <div class="password-container">
                   <input
                     (input)="this.resetErrorPassword()"
-                    [type]="passwordVisible ? 'text' : 'password'"
+                    [type]="
+                      this.dataService.passwordVisible ? 'text' : 'password'
+                    "
                     placeholder="Passwort"
-                    name="password"
-                    [(ngModel)]="password"
-                    [class.error]="this.emptyPassword && !password"
+                    name="dataService.password"
+                    [(ngModel)]="this.dataService.password"
+                    [class.error]="
+                      this.dataService.emptyPassword &&
+                      !this.dataService.password
+                    "
                   />
                   <button
                     type="button"
@@ -48,7 +59,7 @@
                   >
                     <img
                       [src]="
-                        passwordVisible
+                        this.dataService.passwordVisible
                           ? '/assets/icons/eye-slash.svg'
                           : '/assets/icons/eye.svg'
                       "
@@ -57,32 +68,39 @@
                     />
                   </button>
                 </div>
-                <p class="error-text-input" *ngIf="this.emptyPassword">
+                <p
+                  class="error-text-input"
+                  *ngIf="this.dataService.emptyPassword"
+                >
                   Bitte geben Sie eine gültiges Passwort ein.
                 </p>
               </div>
             </div>
           </div>
           <button
-            [disabled]="inputIsEmpty"
+            [disabled]="this.dataService.inputIsEmpty"
             [ngClass]="{
-              'submit-empty-button': inputIsEmpty,
-              'submit-button': !inputIsEmpty
+              'submit-empty-button': this.dataService.inputIsEmpty,
+              'submit-button': !this.dataService.inputIsEmpty
             }"
             type="submit"
           >
             Anmelden
           </button>
         </form>
-        <p class="error-text-input" *ngIf="this.wrongData">
-          {{ this.wrongData }}
+        <p class="error-text-input" *ngIf="this.dataService.wrongData">
+          {{ this.dataService.wrongData }}
         </p>
         <div class="reset-password-container">
           <p (click)="this.loadForgetPassword()">Passwort vergessen?</p>
         </div>
-        <div class="checkbox-container" (click)="this.toggleRememberMe()">
-          <div class="checkbox" [class.checked]="rememberMe">
-            <span *ngIf="rememberMe" class="checkmark">✔</span>
+        <div class="checkbox-container">
+          <div
+            (click)="this.toggleRememberMe()"
+            class="checkbox"
+            [class.checked]="this.dataService.rememberMe"
+          >
+            <span *ngIf="this.dataService.rememberMe" class="checkmark">✔</span>
           </div>
           <label>Login-Daten speichern</label>
         </div>
@@ -114,15 +132,16 @@
                   (input)="this.resetErrorEmailOrUsernameForget()"
                   type="text"
                   placeholder="E-Mail oder Benutzername"
-                  name="emailOrUsernameForget"
-                  [(ngModel)]="emailOrUsernameForget"
+                  name="dataService.emailOrUsernameForget"
+                  [(ngModel)]="this.dataService.emailOrUsernameForget"
                   [class.error]="
-                    this.emptyEmailOrUsernameForget && !emailOrUsernameForget
+                    this.dataService.emptyEmailOrUsernameForget &&
+                    !this.dataService.emailOrUsernameForget
                   "
                 />
                 <p
                   class="error-text-input"
-                  *ngIf="this.emptyEmailOrUsernameForget"
+                  *ngIf="this.dataService.emptyEmailOrUsernameForget"
                 >
                   Bitte geben Sie eine gültige E-Mail-Adresse oder Benutzername
                   ein.
@@ -131,18 +150,18 @@
             </div>
           </div>
           <button
-            [disabled]="inputIsEmpty"
+            [disabled]="this.dataService.inputIsEmpty"
             [ngClass]="{
-              'submit-empty-button': inputIsEmpty,
-              'submit-button': !inputIsEmpty
+              'submit-empty-button': this.dataService.inputIsEmpty,
+              'submit-button': !this.dataService.inputIsEmpty
             }"
             type="submit"
           >
             Passwort zurücksetzen
           </button>
         </form>
-        <p class="error-text-input" *ngIf="this.wrongData">
-          {{ this.wrongData }}
+        <p class="error-text-input" *ngIf="this.dataService.wrongData">
+          {{ this.dataService.wrongData }}
         </p>
       </div>
 
@@ -178,32 +197,64 @@
                   (input)="this.resetEmailEmptyError()"
                   type="email"
                   placeholder="E-Mail"
-                  name="email"
-                  [(ngModel)]="email"
-                  [class.error]="this.emptyEmail && !this.email"
+                  name="dataService.email"
+                  [(ngModel)]="this.dataService.email"
+                  [class.error]="
+                    this.dataService.emptyEmail && !this.dataService.email
+                  "
                 />
-                <p class="error-text-input" *ngIf="this.emptyEmail">
+                <p class="error-text-input" *ngIf="this.dataService.emptyEmail">
                   Bitte geben Sie Ihre E-Mail ein.
                 </p>
-                <p class="error-text-input" *ngIf="this.isNotAnEmail">
+                <p
+                  class="error-text-input"
+                  *ngIf="this.dataService.isNotAnEmail"
+                >
                   Bitte geben Sie eine gültige E-Mail ein.
                 </p>
               </div>
             </div>
           </div>
+          <div class="checkbox-register-container">
+            <div
+              class="checkbox"
+              [class.checked]="this.dataService.privacyPolicyAccept"
+              (click)="this.togglePrivacyPolicy()"
+            >
+              <span
+                *ngIf="this.dataService.privacyPolicyAccept"
+                class="checkmark"
+                >✔</span
+              >
+            </div>
+            <label>Ich simme der </label>
+            <label
+              (click)="this.dataService.loadPrivacyPolicyPage()"
+              class="privacy-policy-register-link"
+              >Datenschutzerklärung</label
+            >
+            <label>zu.</label>
+          </div>
           <button
-            [disabled]="inputIsEmpty"
+            [disabled]="
+              this.dataService.inputIsEmpty ||
+              !this.dataService.privacyPolicyAccept
+            "
             [ngClass]="{
-              'submit-empty-button': inputIsEmpty,
-              'submit-button': !inputIsEmpty
+              'submit-empty-button':
+                this.dataService.inputIsEmpty ||
+                !this.dataService.privacyPolicyAccept,
+              'submit-button':
+                !this.dataService.inputIsEmpty &&
+                this.dataService.privacyPolicyAccept
             }"
             (click)="this.switchToNamePage()"
           >
             Weiter
           </button>
         </form>
-        <p class="error-text-input" *ngIf="this.wrongData">
-          {{ this.wrongData }}
+        <p class="error-text-input" *ngIf="this.dataService.wrongData">
+          {{ this.dataService.wrongData }}
         </p>
       </div>
 
@@ -227,11 +278,17 @@
                   (input)="this.resetErrorFirstName()"
                   type="text"
                   placeholder="Vorname"
-                  name="firstName"
-                  [(ngModel)]="firstName"
-                  [class.error]="this.emptyFirstName && !this.firstName"
+                  name="dataService.firstName"
+                  [(ngModel)]="this.dataService.firstName"
+                  [class.error]="
+                    this.dataService.emptyFirstName &&
+                    !this.dataService.firstName
+                  "
                 />
-                <p class="error-text-input" *ngIf="this.emptyFirstName">
+                <p
+                  class="error-text-input"
+                  *ngIf="this.dataService.emptyFirstName"
+                >
                   Bitte geben Sie Ihren Vorname ein.
                 </p>
               </div>
@@ -242,11 +299,16 @@
                   (input)="this.resetErrorLastName()"
                   type="text"
                   placeholder="Nachname"
-                  name="lastName"
-                  [(ngModel)]="lastName"
-                  [class.error]="this.emptyLastName && !this.lastName"
+                  name="dataService.lastName"
+                  [(ngModel)]="this.dataService.lastName"
+                  [class.error]="
+                    this.dataService.emptyLastName && !this.dataService.lastName
+                  "
                 />
-                <p class="error-text-input" *ngIf="this.emptyLastName">
+                <p
+                  class="error-text-input"
+                  *ngIf="this.dataService.emptyLastName"
+                >
                   Bitte geben Sie Ihren Nachnamen ein.
                 </p>
               </div>
@@ -256,32 +318,40 @@
                 (input)="this.resetErrorUsername()"
                 type="text"
                 placeholder="Benutzername"
-                name="userName"
-                [(ngModel)]="userName"
-                [class.error]="this.emptyUserName && !this.userName"
+                name="dataService.userName"
+                [(ngModel)]="this.dataService.userName"
+                [class.error]="
+                  this.dataService.emptyUserName && !this.dataService.userName
+                "
               />
-              <p class="error-text-input" *ngIf="this.emptyUserName">
+              <p
+                class="error-text-input"
+                *ngIf="this.dataService.emptyUserName"
+              >
                 Bitte geben Sie einen Benutzername ein.
               </p>
-              <p class="error-text-input" *ngIf="this.usernameHasSpecialChars">
+              <p
+                class="error-text-input"
+                *ngIf="this.dataService.usernameHasSpecialChars"
+              >
                 Bitte geben Sie einen Benutzername ohne Sonderzeichen ein.
               </p>
             </div>
           </div>
           <button
             (click)="this.switchToPasswordPage()"
-            [disabled]="inputIsEmpty"
+            [disabled]="this.dataService.inputIsEmpty"
             [ngClass]="{
-              'submit-empty-button': inputIsEmpty,
-              'submit-button': !inputIsEmpty
+              'submit-empty-button': this.dataService.inputIsEmpty,
+              'submit-button': !this.dataService.inputIsEmpty
             }"
             type="submit"
           >
             Weiter
           </button>
         </form>
-        <p class="error-text-input" *ngIf="this.wrongData">
-          {{ this.wrongData }}
+        <p class="error-text-input" *ngIf="this.dataService.wrongData">
+          {{ this.dataService.wrongData }}
         </p>
       </div>
 
@@ -304,12 +374,17 @@
                 <div class="password-container">
                   <input
                     (input)="this.resetErrorPasswordRegister()"
-                    [type]="passwordRegisterVisible ? 'text' : 'password'"
+                    [type]="
+                      this.dataService.passwordRegisterVisible
+                        ? 'text'
+                        : 'password'
+                    "
                     placeholder="Passwort"
-                    name="password"
-                    [(ngModel)]="passwordRegister"
+                    name="dataService.password"
+                    [(ngModel)]="this.dataService.passwordRegister"
                     [class.error]="
-                      this.emptyPasswordRegister && !this.passwordRegister
+                      this.dataService.emptyPasswordRegister &&
+                      !this.dataService.passwordRegister
                     "
                   />
                   <button
@@ -318,7 +393,7 @@
                   >
                     <img
                       [src]="
-                        passwordRegisterVisible
+                        this.dataService.passwordRegisterVisible
                           ? '/assets/icons/eye-slash.svg'
                           : '/assets/icons/eye.svg'
                       "
@@ -328,7 +403,7 @@
                   </button>
                   <p
                     class="error-text-input"
-                    *ngIf="this.emptyPasswordRegister"
+                    *ngIf="this.dataService.emptyPasswordRegister"
                   >
                     Bitte geben Sie eine gültiges Passwort ein.
                   </p>
@@ -341,14 +416,16 @@
                   <input
                     (input)="this.resetErrorPasswordRepeatedRegister()"
                     [type]="
-                      passwordRepeatedRegisterVisible ? 'text' : 'password'
+                      this.dataService.passwordRepeatedRegisterVisible
+                        ? 'text'
+                        : 'password'
                     "
                     placeholder="Passwort wiederholen"
-                    name="repeatedPasswordRegister"
-                    [(ngModel)]="repeatedPasswordRegister"
+                    name="dataService.repeatedPasswordRegister"
+                    [(ngModel)]="this.dataService.repeatedPasswordRegister"
                     [class.error]="
-                      this.emptyPasswordRepeatedRegister &&
-                      !this.repeatedPasswordRegister
+                      this.dataService.emptyPasswordRepeatedRegister &&
+                      !this.dataService.repeatedPasswordRegister
                     "
                   />
                   <button
@@ -357,7 +434,7 @@
                   >
                     <img
                       [src]="
-                        passwordRepeatedRegisterVisible
+                        this.dataService.passwordRepeatedRegisterVisible
                           ? '/assets/icons/eye-slash.svg'
                           : '/assets/icons/eye.svg'
                       "
@@ -365,29 +442,29 @@
                       class="password-icon"
                     />
                   </button>
-                  <p
-                    class="error-text-input"
-                    *ngIf="this.emptyPasswordRepeatedRegister"
-                  >
-                    Passwort stimmt nicht überein.
-                  </p>
                 </div>
+                <p
+                  class="error-text-input"
+                  *ngIf="this.dataService.emptyPasswordRepeatedRegister"
+                >
+                  Passwort stimmt nicht überein.
+                </p>
               </div>
             </div>
           </div>
           <button
-            [disabled]="inputIsEmpty"
+            [disabled]="this.dataService.inputIsEmpty"
             [ngClass]="{
-              'submit-empty-button': inputIsEmpty,
-              'submit-button': !inputIsEmpty
+              'submit-empty-button': this.dataService.inputIsEmpty,
+              'submit-button': !this.dataService.inputIsEmpty
             }"
             type="submit"
           >
             Registrieren
           </button>
         </form>
-        <p class="error-text-input" *ngIf="this.wrongData">
-          {{ this.wrongData }}
+        <p class="error-text-input" *ngIf="this.dataService.wrongData">
+          {{ this.dataService.wrongData }}
         </p>
       </div>
     </div>

@@ -12,48 +12,26 @@ import { DataService } from '../service/data.service';
   styleUrl: './login-page.component.scss'
 })
 export class LoginPageComponent {
-  firstName: string = '';
-  lastName: string = '';
-  userName: string = '';
-  email: string = '';
-  emailOrUsername: string = '';
-  password: string = '';
-  passwordRegister: string = '';
-  repeatedPasswordRegister: string = '';
-  emailOrUsernameForget: string = '';
-  wrongData: string | undefined;
-  emptyEmailOrUsername: boolean = false;
-  emptyUserName: boolean = false;
-  emptyEmail: boolean = false;
-  emptyLastName: boolean = false;
-  emptyFirstName: boolean = false;
-  emptyPassword: boolean = false;
-  emptyRepeatedPassword: boolean = false;
-  emptyEmailOrUsernameForget: boolean = false;
-  emptyPasswordRegister: boolean = false;
-  emptyPasswordRepeatedRegister: boolean = false;
-  rememberMe: boolean = false;
-  isNotAnEmail: boolean = false;
-  usernameHasSpecialChars: boolean = false;
-  inputIsEmpty: boolean = true;
-  passwordVisible: boolean = false;
-  passwordRegisterVisible: boolean = false;
-  passwordRepeatedRegisterVisible: boolean = false;
 
   constructor(public dataService: DataService) { }
 
+  /**
+   * Initializes the component by loading login data.
+   */
   ngOnInit() {
     this.loadLoginData();
-
   }
 
+  /**
+   * Handles the login process by validating input fields.
+   */
   async login() {
-    if (!this.emailOrUsername) {
-      this.emptyEmailOrUsername = true;
+    if (!this.dataService.emailOrUsername) {
+      this.dataService.emptyEmailOrUsername = true;
       return;
     }
-    if (!this.password) {
-      this.emptyPassword = true;
+    if (!this.dataService.password) {
+      this.dataService.emptyPassword = true;
       return;
     } else {
       await this.loginOnApi();
@@ -61,313 +39,387 @@ export class LoginPageComponent {
     }
   }
 
+  /**
+   * Sends a login request to the API and processes the response.
+   */
   async loginOnApi() {
+    console.log("this.dataService.emailOrUsername, password: this.dataService.password", this.dataService.emailOrUsername, this.dataService.password)
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}login/`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username_or_email: this.emailOrUsername, password: this.password }),
+        body: JSON.stringify({ username_or_email: this.dataService.emailOrUsername, password: this.dataService.password }),
       });
       const responseData = await response.json();
       if (!response.ok) {
-        this.wrongData = responseData.detail;
+        this.dataService.wrongData = responseData.detail;
       }
       if (responseData && responseData.token) {
         this.dataService.user = new User(responseData);
-        this.saveUserToLocalStorage();
+        this.dataService.saveUserToLocalStorage();
       } else {
-        this.wrongData = responseData.detail;
+        this.dataService.wrongData = responseData.detail;
       }
     } catch (error) {
-      this.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
+      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
     }
   }
 
-  saveUserToLocalStorage() {
-    localStorage.setItem('user', JSON.stringify({
-      token: this.dataService.user.token,
-      user: this.dataService.user.user,
-      username: this.dataService.user.username,
-      first_name: this.dataService.user.first_name,
-      last_name: this.dataService.user.last_name,
-      email: this.dataService.user.email
-    }));
-  }
-
+  /**
+   * Resets the email or username error flag.
+   */
   resetErrorEmailOrUsername() {
-    this.emptyEmailOrUsername = false;
-    if (this.emailOrUsername !== '' && this.password !== '') {
-      this.inputIsEmpty = false;
+    this.dataService.emptyEmailOrUsername = false;
+    if (this.dataService.emailOrUsername !== '' && this.dataService.password !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+   * Resets the email or username error flag for the password reset process.
+   */
   resetErrorEmailOrUsernameForget() {
-    this.emptyEmailOrUsernameForget = false;
-    if (this.emailOrUsernameForget !== '') {
-      this.inputIsEmpty = false;
+    this.dataService.emptyEmailOrUsernameForget = false;
+    if (this.dataService.emailOrUsernameForget !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+   * Resets the password error flag.
+   */
   resetErrorPassword() {
-    this.emptyPassword = false;
-    if (this.emailOrUsername !== '' && this.password !== '') {
-      this.inputIsEmpty = false;
+    this.dataService.emptyPassword = false;
+    if (this.dataService.emailOrUsername !== '' && this.dataService.password !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+   * Handles actions after a successful login.
+   */
   handleLoginSuccess() {
-    if (this.rememberMe) {
+    if (this.dataService.rememberMe) {
       this.saveLoginData();
     } else {
       this.clearLoginData();
     }
   }
 
+  /**
+  * Saves login credentials to local storage.
+  */
   saveLoginData() {
     localStorage.setItem('loginData', JSON.stringify({
-      emailOrUsername: this.emailOrUsername,
-      password: this.password
+      emailOrUsername: this.dataService.emailOrUsername,
+      password: this.dataService.password
     }));
   }
 
+  /**
+   * Clears saved login credentials from local storage.
+   */
   clearLoginData() {
     localStorage.removeItem('loginData');
   }
 
+  /**
+   * Toggles the 'remember me' option.
+   */
   toggleRememberMe() {
-    this.rememberMe = !this.rememberMe;
+    this.dataService.rememberMe = !this.dataService.rememberMe;
   }
 
+  /**
+   * Toggles the acceptance of the privacy policy.
+   */
+  togglePrivacyPolicy() {
+    this.dataService.privacyPolicyAccept = !this.dataService.privacyPolicyAccept;
+  }
+
+  /**
+   * Activates the password reset page.
+   */
   loadForgetPassword() {
     this.dataService.resetBooleanOfContent();
+    this.dataService.resetInputString();
     this.dataService.resetPasswordPageActive = true;
-    this.inputIsEmpty = true;
+    this.dataService.inputIsEmpty = true;
   }
 
+  /**
+   * Loads stored login data from local storage.
+   */
   loadLoginData() {
     let loginData = localStorage.getItem('loginData');
     if (loginData) {
       try {
         const parsedData = JSON.parse(loginData);
-        this.emailOrUsername = parsedData.emailOrUsername;
-        this.password = parsedData.password;
+        this.dataService.emailOrUsername = parsedData.emailOrUsername;
+        this.dataService.password = parsedData.password;
         this.toggleRememberMe();
-        this.inputIsEmpty = false;
+        this.dataService.inputIsEmpty = false;
       } catch (error) {
         console.error('Fehler beim Laden der Login-Daten:', error);
       }
     }
   }
 
-
+  /**
+   * Loads stored login credentials from local storage.
+   */
   async setForgetPassword() {
-    if (!this.emailOrUsernameForget) {
-      this.emptyEmailOrUsernameForget = true;
+    if (!this.dataService.emailOrUsernameForget) {
+      this.dataService.emptyEmailOrUsernameForget = true;
     } else {
       await this.resetPasswordRequestOnAPI();
     }
   }
 
+  /**
+   * Sends a password reset request to the API.
+   */
   async resetPasswordRequestOnAPI() {
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}authentication/password_reset/`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email_or_username: this.emailOrUsernameForget }),
+        body: JSON.stringify({ email_or_username: this.dataService.emailOrUsernameForget }),
       });
       const responseData = await response.json();
       this.dataService.resetBooleanOfContent();
       this.dataService.emailRequestHasBeenSent = true;
-      this.resetInputString();
+      this.dataService.resetInputString();
     } catch (error) {
-      this.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
+      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
     }
   }
 
+  /**
+   * Loads the registration page and updates input validation status.
+   */
   loadRegisterPage() {
-    if (this.email !== '') {
-      this.inputIsEmpty = false;
+    if (this.dataService.email !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
     this.dataService.resetBooleanOfContent();
     this.dataService.registerPageActive = true;
   }
 
+  /**
+   * Navigates back to the sign-in page.
+   */
   backToSigInPage() {
     this.dataService.resetBooleanOfContent();
     this.loadLoginData();
-    if (this.emailOrUsername !== '' && this.password !== '') {
-      this.inputIsEmpty = false;
+    if (this.dataService.emailOrUsername !== '' && this.dataService.password !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
     this.dataService.loginPageActive = true;
     this.toggleRememberMe();
   }
 
+  /**
+   * Validates the email format and switches to the name input page.
+   */
   switchToNamePage() {
-    this.inputIsEmpty = true;
-    this.isNotAnEmail = false
-    this.dataService.resetBooleanOfContent();
-    this.dataService.registerPageNameActive = true;
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(this.dataService.email)) {
+      this.dataService.inputIsEmpty = true;
+      this.dataService.isNotAnEmail = false;
+      this.dataService.resetBooleanOfContent();
+      this.dataService.registerPageNameActive = true;
+    } else {
+      this.dataService.isNotAnEmail = true;
+    }
   }
 
+  /**
+  * Validates the email format and navigates to the name input page.
+  */
   switchToPasswordPage() {
-    if (this.firstName === '') {
-      this.emptyFirstName = true;
-    } else if (this.lastName === '') {
-      this.emptyLastName = true;
-    } else if (this.userName === '') {
-      this.emptyUserName = true;
-    } else if (/[^a-zA-Z0-9]/.test(this.userName)) {
-      this.usernameHasSpecialChars = true;
+    if (this.dataService.firstName === '') {
+      this.dataService.emptyFirstName = true;
+    } else if (this.dataService.lastName === '') {
+      this.dataService.emptyLastName = true;
+    } else if (this.dataService.userName === '') {
+      this.dataService.emptyUserName = true;
+    } else if (/[^a-zA-Z0-9]/.test(this.dataService.userName)) {
+      this.dataService.usernameHasSpecialChars = true;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
       this.dataService.resetBooleanOfContent();
       this.dataService.registerPagePasswordActive = true;
     }
   }
 
+  /**
+  * Resets the email empty error flag and updates input validation state.
+  */
   resetEmailEmptyError() {
-    if (this.email !== '') {
-      this.emptyEmail = false;
-      this.isNotAnEmail = false;
-      this.inputIsEmpty = false;
+    if (this.dataService.email !== '') {
+      this.dataService.emptyEmail = false;
+      this.dataService.isNotAnEmail = false;
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.emptyEmail = true;
-      this.inputIsEmpty = true;
+      this.dataService.emptyEmail = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+  * Resets the first name error flag and checks input completeness.
+  */
   resetErrorFirstName() {
-    if (this.firstName !== '') {
-      this.emptyFirstName = false;
+    if (this.dataService.firstName !== '') {
+      this.dataService.emptyFirstName = false;
     } else {
-      this.emptyFirstName = true;
+      this.dataService.emptyFirstName = true;
     }
-    if (this.firstName !== '' && this.lastName !== '' && this.userName !== '') {
-      this.inputIsEmpty = false;
+    if (this.dataService.firstName !== '' && this.dataService.lastName !== '' && this.dataService.userName !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+  * Resets the last name error flag and checks input completeness.
+  */
   resetErrorLastName() {
-    if (this.lastName !== '') {
-      this.emptyLastName = false;
+    if (this.dataService.lastName !== '') {
+      this.dataService.emptyLastName = false;
     } else {
-      this.emptyLastName = true;
+      this.dataService.emptyLastName = true;
     }
-    if (this.firstName !== '' && this.lastName !== '' && this.userName !== '') {
-      this.inputIsEmpty = false;
+    if (this.dataService.firstName !== '' && this.dataService.lastName !== '' && this.dataService.userName !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+  * Resets the last name error flag and checks input completeness.
+  */
   resetErrorUsername() {
-    if (this.userName !== '') {
-      this.emptyUserName = false;
-      if (/[^a-zA-Z0-9]/.test(this.userName)) {
-        this.usernameHasSpecialChars = true;
+    if (this.dataService.userName !== '') {
+      this.dataService.emptyUserName = false;
+      if (/[^a-zA-Z0-9]/.test(this.dataService.userName)) {
+        this.dataService.usernameHasSpecialChars = true;
       } else {
-        this.usernameHasSpecialChars = false;
+        this.dataService.usernameHasSpecialChars = false;
       }
     } else {
-      this.emptyUserName = true;
+      this.dataService.emptyUserName = true;
     }
-    if (this.firstName !== '' && this.lastName !== '' && this.userName !== '') {
-      this.inputIsEmpty = false;
+    if (this.dataService.firstName !== '' && this.dataService.lastName !== '' && this.dataService.userName !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+  * Resets the password registration error flag and checks input completeness..
+  */
   resetErrorPasswordRegister() {
-    this.emptyPasswordRegister = false;
-    if (this.passwordRegister !== '' && this.repeatedPasswordRegister !== '') {
-      this.inputIsEmpty = false;
+    this.dataService.emptyPasswordRegister = false;
+    if (this.dataService.passwordRegister !== '' && this.dataService.repeatedPasswordRegister !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
   }
 
+  /**
+  * Resets the repeated password registration error flag and checks input validity.
+  */
   resetErrorPasswordRepeatedRegister() {
-    this.emptyPasswordRepeatedRegister = false;
-    if (this.passwordRegister !== '' && this.repeatedPasswordRegister !== '' && this.passwordRegister === this.repeatedPasswordRegister) {
-      this.inputIsEmpty = false;
+    this.dataService.emptyPasswordRepeatedRegister = false;
+    if (this.dataService.passwordRegister !== '' && this.dataService.repeatedPasswordRegister !== '' && this.dataService.passwordRegister === this.dataService.repeatedPasswordRegister) {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
-      this.emptyPasswordRepeatedRegister = true;
+      this.dataService.inputIsEmpty = true;
+      this.dataService.emptyPasswordRepeatedRegister = true;
     }
   }
 
+  /**
+  * Navigates back to the name registration page.
+  */
   backNameRegisterPage() {
-    if (this.firstName !== '' && this.lastName !== '' && this.userName !== '') {
-      this.inputIsEmpty = false;
+    if (this.dataService.firstName !== '' && this.dataService.lastName !== '' && this.dataService.userName !== '') {
+      this.dataService.inputIsEmpty = false;
     } else {
-      this.inputIsEmpty = true;
+      this.dataService.inputIsEmpty = true;
     }
     this.dataService.resetBooleanOfContent();
     this.dataService.registerPageNameActive = true;
   }
 
-  resetInputString() {
-    this.emailOrUsername = '';
-    this.password = '';
-  }
-
+  /**
+  * Toggles the visibility of the password input field.
+  */
   togglePasswordVisibility() {
-    this.passwordVisible = !this.passwordVisible;
+    this.dataService.passwordVisible = !this.dataService.passwordVisible;
   }
 
+  /**
+  * Toggles the visibility of the registration password input field.
+  */
   togglePasswordVisibilityRegister() {
-    this.passwordRegisterVisible = !this.passwordRegisterVisible;
+    this.dataService.passwordRegisterVisible = !this.dataService.passwordRegisterVisible;
   }
 
+  /**
+  * Toggles the visibility of the repeated password input field during registration.
+  */
   togglePasswordRepeatedVisibilityRegister() {
-    this.passwordRepeatedRegisterVisible = !this.passwordRepeatedRegisterVisible;
+    this.dataService.passwordRepeatedRegisterVisible = !this.dataService.passwordRepeatedRegisterVisible;
   }
 
+  /**
+  * Initiates the user registration process.
+  */
   register() {
-    if (this.passwordRegister === this.repeatedPasswordRegister) {
+    if (this.dataService.passwordRegister === this.dataService.repeatedPasswordRegister) {
       this.registerUserOnAPI();
     } else {
-      this.emptyPasswordRepeatedRegister = true;
+      this.dataService.emptyPasswordRepeatedRegister = true;
     }
   }
 
+  /**
+  * Handles the user registration process.
+  */
   async registerUserOnAPI() {
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}authentication/registration/`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: this.email,
-          username: this.userName,
-          first_name: this.firstName,
-          last_name: this.lastName,
-          password: this.passwordRegister,
-          repeated_password: this.repeatedPasswordRegister
-        }),
+        body: this.dataService.generateBodyRegister(),
       });
       const responseData = await response.json();
       if (!response.ok) {
-        this.wrongData = "Ein Benutzer mit diesem Benutzernamen oder E-Mail existiert bereits.";
+        this.dataService.wrongData = "Ein Benutzer mit diesem Benutzernamen oder E-Mail existiert bereits.";
       } else {
         this.dataService.resetBooleanOfContent();
         this.dataService.emailRequestHasBeenSent = true;
-        this.resetInputString();
+        this.dataService.resetInputString();
       }
     } catch (error) {
-      this.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
+      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
     }
   }
 }
