@@ -1,0 +1,104 @@
+@import "./../../styles.scss";
+
+.viewer-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: $background-black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $white;
+}
+
+.viewer-container-add-viewer-active {
+  width: 100vw;
+  height: 100vh;
+  background-color: $black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $white;
+}
+
+.viewer-content {
+  > span {
+    font-size: 46px;
+  }
+}
+
+.select-viewer-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.select-viewer-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  > span {
+    font-size: 14px;
+    padding-top: 8px;
+  }
+  > img {
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 10vw;
+    max-height: 200px;
+    max-width: 200px;
+    min-height: 84px;
+    min-width: 84px;
+    position: relative;
+    text-decoration: none;
+    width: 10vw;
+    border-radius: 8px;
+  }
+}
+
+.add-viewer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  > span {
+    font-size: 14px;
+    padding-top: 8px;
+  }
+}
+
+.add-viewer-img-container {
+  cursor: pointer;
+  border-radius: 8px;
+  height: 10vw;
+  width: 10vw;
+  max-height: 200px;
+  max-width: 200px;
+  min-height: 84px;
+  min-width: 84px;
+  > img {
+    height: 10vw;
+    max-height: 200px;
+    max-width: 200px;
+    min-height: 84px;
+    min-width: 84px;
+  }
+}
+
+.add-viewer-img-container:hover {
+  background-color: $white;
+}
+
+.add-viewer-content {
+  background-color: $background-black;
+  height: 60vh;
+  width: 80vw;
+  max-width: 800px;
+  border-radius: 8px;
+  border: 1px solid $white;
+}

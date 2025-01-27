@@ -1,0 +1,30 @@
+<div
+  [ngClass]="{
+    'viewer-container': this.viewerSelectPageActive,
+    'viewer-container-add-viewer-active': this.addViewerPageActive
+  }"
+>
+  <div class="viewer-content" *ngIf="this.viewerSelectPageActive">
+    <span>Wer schaut gerade?</span>
+    <div class="select-viewer-container">
+      <div
+        *ngFor="let viewer of dataService.viewers"
+        class="select-viewer-content"
+      >
+        <img src="{{ viewer.picture_file }}" alt="picture" />
+        <span>{{ viewer.viewername }}</span>
+      </div>
+      <div class="add-viewer-container">
+        <div class="add-viewer-img-container" (click)="this.addViewer()">
+          <img src="/assets/img/cross.png" alt="cross" />
+        </div>
+        <span class="add-viewer-text">Profil hinzufügen</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="this.addViewerPageActive" class="add-viewer-content">
+    <div>
+      <img src="{{ this.randomImgPath }}" alt="avatar" />
+    </div>
+  </div>
+</div>

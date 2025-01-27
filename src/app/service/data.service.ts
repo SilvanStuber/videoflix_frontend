@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../../assets/models/user.class';
+import { Viewer } from '../../assets/models/viewers.class';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -47,6 +48,7 @@ export class DataService {
   registerPagePasswordActive: boolean = false;
   imprintPagePasswordActive: boolean = false;
   privacyPolicyPagePasswordActive: boolean = false;
+  viewers: Viewer[] = [];
   private pageState = {
     loginPageActive: false,
     emailRequestHasBeenSent: false,
@@ -140,7 +142,34 @@ export class DataService {
       last_name: this.user.last_name,
       email: this.user.email
     }));
+    if (this.user.token) {
+      this.router.navigate(['/viewer-page']);
+    }
   }
+
+  /**
+  * Loads the authenticated user data from local storage and initializes the user object.
+  */
+  loadUserFromLocalStorage() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        this.user = new User();
+        this.user.token = parsedUser.token || '';
+        this.user.user = parsedUser.user || '';
+        this.user.username = parsedUser.username || '';
+        this.user.first_name = parsedUser.first_name || '';
+        this.user.last_name = parsedUser.last_name || '';
+        this.user.email = parsedUser.email || '';
+      } catch (error) {
+        console.error('Error parsing user data from local storage:', error);
+      }
+    } else {
+      console.warn('No user data found in local storage.');
+    }
+  }
+
 
   /**
   * Generates the request body for user registration.

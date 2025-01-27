@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { User } from '../../assets/models/user.class';
 import { DataService } from '../service/data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -13,7 +14,7 @@ import { DataService } from '../service/data.service';
 })
 export class LoginPageComponent {
 
-  constructor(public dataService: DataService) { }
+  constructor(public dataService: DataService, private router: Router) { }
 
   /**
    * Initializes the component by loading login data.
@@ -43,7 +44,6 @@ export class LoginPageComponent {
    * Sends a login request to the API and processes the response.
    */
   async loginOnApi() {
-    console.log("this.dataService.emailOrUsername, password: this.dataService.password", this.dataService.emailOrUsername, this.dataService.password)
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}login/`, {
         method: "POST",
