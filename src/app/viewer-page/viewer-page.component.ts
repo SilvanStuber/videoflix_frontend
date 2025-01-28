@@ -177,8 +177,12 @@ export class ViewerPageComponent {
     }
   }
 
-  loadVideoCollection() {
-
+  /**
+   * Navigates to the video collection page for a specific viewer.
+   * @param {Number} idViewer - The ID of the viewer.
+   */
+  loadVideoCollection(idViewer: Number) { /* TODO GO TO video-collection */
+    this.router.navigate(['/video-collection', idViewer]);
   }
 }
 

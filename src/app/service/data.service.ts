@@ -49,6 +49,7 @@ export class DataService {
   imprintPagePasswordActive: boolean = false;
   privacyPolicyPagePasswordActive: boolean = false;
   viewers: Viewer[] = [];
+  singleViewer: Viewer = new Viewer();
   private pageState = {
     loginPageActive: false,
     emailRequestHasBeenSent: false,

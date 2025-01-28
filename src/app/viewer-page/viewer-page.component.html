@@ -10,7 +10,7 @@
       <div
         *ngFor="let viewer of dataService.viewers"
         class="select-viewer-content"
-        (click)="this.loadVideoCollection()"
+        (click)="this.loadVideoCollection(viewer.viewer_id)"
       >
         <img src="{{ viewer.picture_file }}" alt="picture" />
         <span>{{ viewer.viewername }}</span>
