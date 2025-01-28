@@ -10,6 +10,7 @@
       <div
         *ngFor="let viewer of dataService.viewers"
         class="select-viewer-content"
+        (click)="this.loadVideoCollection()"
       >
         <img src="{{ viewer.picture_file }}" alt="picture" />
         <span>{{ viewer.viewername }}</span>
@@ -22,9 +23,48 @@
       </div>
     </div>
   </div>
+
   <div *ngIf="this.addViewerPageActive" class="add-viewer-content">
-    <div>
-      <img src="{{ this.randomImgPath }}" alt="avatar" />
+    <div class="back-arrow-container">
+      <img
+        (click)="this.backToSelectViewer()"
+        src="/assets/img/arrow_left.png"
+        alt="arrow_left"
+      />
     </div>
+    <div class="save-viewer-img-container">
+      <img
+        class="save-viewer-user-img"
+        src="{{ this.randomImgPath }}"
+        alt="avatar"
+      />
+      <img
+        (click)="this.setRandomImagePath()"
+        class="save-viewer-change-img"
+        src="/assets/img/change.png"
+        alt="avatar"
+      />
+    </div>
+    <form class="save-viewer-input-container">
+      <input
+        (input)="this.resetErrorViewername()"
+        type="text"
+        placeholder="Name"
+        name="viewername"
+        [(ngModel)]="this.viewername"
+        [class.error]="this.emptyViewername && !this.viewername"
+      />
+      <button
+        (click)="this.saveViewer()"
+        [disabled]="this.emptyViewername || this.inputIsEmty"
+        [ngClass]="{
+          'submit-empty-button': this.emptyViewername || this.inputIsEmty,
+          'submit-button': !this.emptyViewername && !this.inputIsEmty
+        }"
+        type="submit"
+      >
+        Speichern
+      </button>
+    </form>
   </div>
 </div>

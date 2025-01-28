@@ -22,6 +22,10 @@
 
 .viewer-content {
   > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     font-size: 46px;
   }
 }
@@ -31,7 +35,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .select-viewer-content {
@@ -72,6 +79,22 @@
   }
 }
 
+.back-arrow-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 24px;
+  margin-right: 32px;
+  > img {
+    height: 32px;
+    cursor: pointer;
+    transition: transfgorm 0.3s ease-in-out;
+  }
+  > img:hover {
+    transform: scale(1.2);
+  }
+}
+
 .add-viewer-img-container {
   cursor: pointer;
   border-radius: 8px;
@@ -95,10 +118,199 @@
 }
 
 .add-viewer-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
   background-color: $background-black;
   height: 60vh;
   width: 80vw;
   max-width: 800px;
   border-radius: 8px;
   border: 1px solid $white;
+}
+
+.save-viewer-img-container {
+  padding-top: 80px;
+}
+
+.save-viewer-user-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+}
+
+.save-viewer-change-img {
+  width: 40px;
+  cursor: pointer;
+  z-index: 1;
+  margin-left: -24px;
+  margin-bottom: -24px;
+  opacity: 0.5;
+}
+
+.save-viewer-change-img:hover {
+  opacity: 1;
+}
+
+.save-viewer-input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 80px;
+  > input {
+    border: 2px solid $white;
+    border-radius: 8px;
+    color: $white;
+    background-color: transparent;
+    padding: 10px;
+    outline: none;
+    transition: border-color 0.3s ease, color 0.3s ease;
+    width: 420px;
+    height: 40px;
+    font-size: 18px;
+    padding-left: 12px;
+    margin-top: 12px;
+
+    &::placeholder {
+      color: rgba($white, 0.4);
+    }
+
+    &:focus {
+      border-color: lighten($white, 20%);
+    }
+  }
+}
+
+.submit-button {
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  appearance: none;
+  padding: 18px;
+  margin: 0;
+  margin-top: 24px;
+  color: $white;
+  background-color: $red;
+  width: 445px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.submit-empty-button {
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+  padding: 18px;
+  margin: 0;
+  margin-top: 24px;
+  color: $white;
+  background-color: $gray;
+  width: 445px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.submit-button:hover {
+  background-color: rgba($red, 0.7);
+}
+
+@media (max-width: 700px) {
+  .viewer-content {
+    > span {
+      font-size: 46px !important;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .save-viewer-input-container {
+    > input {
+      width: 320px;
+    }
+  }
+
+  .submit-button {
+    width: 350px;
+  }
+
+  .submit-empty-button {
+    width: 350px;
+  }
+}
+
+@media (max-width: 500px) {
+  .save-viewer-input-container {
+    > input {
+      width: 280px;
+    }
+  }
+
+  .submit-button {
+    width: 310px;
+  }
+
+  .submit-empty-button {
+    width: 310px;
+  }
+}
+
+@media (max-width: 440px) {
+  .save-viewer-input-container {
+    > input {
+      width: 240px;
+    }
+  }
+
+  .submit-button {
+    width: 270px;
+  }
+
+  .submit-empty-button {
+    width: 270px;
+  }
+}
+
+@media (max-width: 400px) {
+  .viewer-content {
+    > span {
+      font-size: 32px !important;
+    }
+  }
+
+  .save-viewer-input-container {
+    > input {
+      width: 200px;
+    }
+  }
+
+  .submit-button {
+    width: 230px;
+  }
+
+  .submit-empty-button {
+    width: 230px;
+  }
+}
+
+@media (max-height: 850px) {
+  .add-viewer-content {
+    height: 70vh;
+  }
+
+  .save-viewer-img-container {
+    padding-top: 40px;
+  }
+
+  .save-viewer-input-container {
+    padding-top: 45px;
+  }
 }
