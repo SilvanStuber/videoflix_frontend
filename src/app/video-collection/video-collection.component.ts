@@ -1,19 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, ElementRef, ViewChild, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../service/data.service';
 import { Viewer } from '../../assets/models/viewers.class';
+import { Video } from '../../assets/models/video.class';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-video-collection',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,],
   templateUrl: './video-collection.component.html',
   styleUrl: './video-collection.component.scss'
 })
 export class VideoCollectionComponent {
   idViewer!: number;
+  video: Video = new Video();
+  selectedResolution: string = '';
+  hideSettingsMenu: boolean = false;
+  showSettingsMenu: boolean = false;
 
-  constructor(public dataService: DataService, private route: ActivatedRoute) { }
+  @ViewChild('videoContainer') videoContainer!: ElementRef;
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+
+  constructor(public dataService: DataService, private route: ActivatedRoute, private http: HttpClient) { }
 
   /**
   * Initializes the component, retrieves the viewer ID from the route, 
@@ -26,8 +39,11 @@ export class VideoCollectionComponent {
         this.idViewer = +idParam;
       }
     });
+
     this.dataService.loadUserFromLocalStorage();
     this.getViewerData();
+
+    this.loadVideo(10); // Beispiel-Video mit ID 10 abrufen
   }
 
   /**
@@ -62,9 +78,93 @@ export class VideoCollectionComponent {
     console.log(responseData)
     if (responseData) {
       this.dataService.singleViewer = new Viewer(responseData);
-      console.log("!!!!!!!!!!!!!!", this.dataService.user, this.dataService.singleViewer)
     } else {
       this.dataService.wrongData = 'Keine Daten erhalten.';
     }
   }
+
+
+  getVideo(videoId: number): Observable<Video> {
+    const headers = new HttpHeaders({
+      'Authorization': `Token ${this.dataService.user.token}`
+    });
+
+    return this.http.get(`${this.dataService.API_BASE_URL}videos/single-video/${videoId}/`, { headers }).pipe(
+      map(data => new Video(data)),
+    );
+  }
+
+  loadVideo(videoId: number): void {
+    this.getVideo(videoId).subscribe(video => {
+      this.video = video;
+
+      const resolveUrl = (path: string) => path.startsWith('http') ? path : `${this.dataService.API_VIDEO_URL}${path}`;
+
+      this.selectedResolution = resolveUrl(video.video_480p) || resolveUrl(video.video_720p) || resolveUrl(video.video_file);
+    }, error => {
+      console.error('Fehler beim Laden des Videos:', error);
+    });
+  }
+
+
+
+  toggleFullScreen() {
+    if (!this.videoContainer) return; // Falls noch nicht geladen, nichts tun
+
+    const elem = this.videoContainer.nativeElement;
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen().catch((err: unknown) => {
+        if (err instanceof Error) {
+          console.error("Fehler beim Wechsel in den Vollbildmodus:", err.message);
+        } else {
+          console.error("Unbekannter Fehler beim Wechsel in den Vollbildmodus:", err);
+        }
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+
+  changeResolution(url: string) {
+    this.selectedResolution = url.startsWith('http')
+      ? url
+      : `${this.dataService.API_VIDEO_URL}${url}`;
+
+    this.showSettingsMenu = false;
+
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  closeMenuOnClickOutside(event: Event) {
+    if (!event.target || !(event.target as HTMLElement).closest('.settings-container')) {
+      this.showSettingsMenu = false;
+    }
+  }
+
+  toggleSettingsMenu() {
+    this.showSettingsMenu = !this.showSettingsMenu;
+  }
+
+  hideControlsAfterDelay() {
+    this.hideSettingsMenu = true;
+  }
+
+  showControls() {
+    this.hideSettingsMenu = false;
+  }
+
+  hideControls() {
+    if (!this.videoPlayer.nativeElement.paused) {
+      this.hideSettingsMenu = true;
+      if (this.showSettingsMenu) {
+        this.toggleSettingsMenu();
+      }
+
+    }
+  }
+
 }
+
+

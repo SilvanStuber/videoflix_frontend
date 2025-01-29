@@ -1,1 +1,31 @@
 <p>video-collection works!</p>
+
+<div
+  #videoContainer
+  class="video-container"
+  (mouseenter)="showControls()"
+  (mouseleave)="hideControls()"
+>
+  <video
+    #videoPlayer
+    [src]="selectedResolution"
+    controls
+    (play)="hideControlsAfterDelay()"
+  ></video>
+  <div
+    class="settings-container"
+    [class.hidden]="hideSettingsMenu"
+    (click)="toggleSettingsMenu()"
+  >
+    ⚙️
+  </div>
+  <div *ngIf="showSettingsMenu" class="settings-menu">
+    <div
+      *ngFor="let res of video.resolutions"
+      class="resolution-option"
+      (click)="changeResolution(res.url)"
+    >
+      {{ res.label }}
+    </div>
+  </div>
+</div>
