@@ -46,6 +46,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  cursor: pointer;
+  color: $darck-gray;
   > span {
     font-size: 14px;
     padding-top: 8px;
@@ -68,14 +70,31 @@
   }
 }
 
+.select-viewer-content:hover {
+  > span {
+    color: $white;
+  }
+  > img {
+    border: 1px solid $white;
+  }
+}
+
 .add-viewer-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  cursor: pointer;
   > span {
     font-size: 14px;
     padding-top: 8px;
+    color: $darck-gray;
+  }
+}
+
+.add-viewer-container:hover {
+  > span {
+    color: $white;
   }
 }
 
@@ -113,10 +132,9 @@
   }
 }
 
-.add-viewer-img-container:hover {
-  background-color: $white;
+.add-viewer-container:hover .add-viewer-img-container {
+  background-color: white;
 }
-
 .add-viewer-content {
   display: flex;
   justify-content: flex-start;
