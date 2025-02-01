@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DataService {
   API_BASE_URL = 'http://127.0.0.1:8000/api/';
-  API_VIDEO_URL = 'http://127.0.0.1:8000/';
+  API_VIDEO_URL = 'http://127.0.0.1:8000';
   firstName: string = '';
   lastName: string = '';
   userName: string = '';

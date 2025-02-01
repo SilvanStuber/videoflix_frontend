@@ -75,7 +75,6 @@ export class VideoCollectionComponent {
    * Handles errors or resets to the viewer selection page on success.
    */
   saveResponseDataViewerGet(responseData: any) {
-    console.log(responseData)
     if (responseData) {
       this.dataService.singleViewer = new Viewer(responseData);
     } else {
@@ -97,10 +96,12 @@ export class VideoCollectionComponent {
   loadVideo(videoId: number): void {
     this.getVideo(videoId).subscribe(video => {
       this.video = video;
-
       const resolveUrl = (path: string) => path.startsWith('http') ? path : `${this.dataService.API_VIDEO_URL}${path}`;
 
-      this.selectedResolution = resolveUrl(video.video_480p) || resolveUrl(video.video_720p) || resolveUrl(video.video_file);
+      this.selectedResolution =
+        resolveUrl(video.video_480p) ||
+        resolveUrl(video.video_720p) ||
+        resolveUrl(video.video_1080p);
     }, error => {
       console.error('Fehler beim Laden des Videos:', error);
     });
@@ -108,32 +109,28 @@ export class VideoCollectionComponent {
 
 
 
-  toggleFullScreen() {
-    if (!this.videoContainer) return; // Falls noch nicht geladen, nichts tun
-
-    const elem = this.videoContainer.nativeElement;
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen().catch((err: unknown) => {
-        if (err instanceof Error) {
-          console.error("Fehler beim Wechsel in den Vollbildmodus:", err.message);
-        } else {
-          console.error("Unbekannter Fehler beim Wechsel in den Vollbildmodus:", err);
-        }
-      });
-    } else {
-      document.exitFullscreen();
-    }
-  }
-
-
   changeResolution(url: string) {
     this.selectedResolution = url.startsWith('http')
       ? url
       : `${this.dataService.API_VIDEO_URL}${url}`;
-
     this.showSettingsMenu = false;
-
   }
+
+
+
+
+
+
+
+  normalizeUrl(url: string): string {
+    if (!url) return '';
+    let normalizedUrl = url.trim().replace(/^https?:\/\//, '');
+    if (normalizedUrl.startsWith('127.0.0.1:8000')) {
+      normalizedUrl = normalizedUrl.replace(/^127.0.0.1:8000/, '');
+    }
+    return normalizedUrl.replace(/\/$/, '');
+  }
+
 
 
   @HostListener('document:click', ['$event'])

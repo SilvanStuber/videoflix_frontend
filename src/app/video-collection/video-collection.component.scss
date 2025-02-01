@@ -1,3 +1,5 @@
+@import "./../../styles.scss";
+
 .video-container {
   position: fixed;
   top: 0;
@@ -19,7 +21,7 @@
 .settings-container {
   position: absolute;
   bottom: 28px;
-  right: 142px;
+  right: 212px;
   color: white;
   border-radius: 50%;
   padding: 10px;
@@ -28,6 +30,7 @@
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease, visibility 0s ease;
+  font-size: 28px;
 }
 
 .settings-container.hidden {
@@ -49,8 +52,8 @@
 
 .settings-menu {
   position: absolute;
-  bottom: 60px;
-  right: 142px;
+  bottom: 80px;
+  right: 218px;
   background: rgba(0, 0, 0, 0.8);
   color: white;
   border-radius: 5px;
@@ -77,4 +80,22 @@
 
 .settings-menu div:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.active-resolution {
+  background-color: $red !important;
+  color: white;
+}
+
+@media (max-width: 1440px) {
+  .settings-container {
+    right: 142px;
+    bottom: 26px;
+    font-size: 18px;
+  }
+
+  .settings-menu {
+    bottom: 60px;
+    right: 142px;
+  }
 }
