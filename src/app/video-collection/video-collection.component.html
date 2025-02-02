@@ -1,35 +1,130 @@
-<p>video-collection works!</p>
+<div class="video-component-container">
+  <header>
+    <img
+      (click)="this.backToMainPage()"
+      src="/assets/img/logo.png"
+      alt="Logo"
+    />
+    <img
+      class="img-viewer-header"
+      src="{{ this.dataService.singleViewer.picture_file }}"
+      alt="viewer picture"
+      (mouseenter)="showMenu()"
+    />
+  </header>
 
-<div
-  #videoContainer
-  class="video-container"
-  (mouseenter)="showControls()"
-  (mouseleave)="hideControls()"
->
-  <video
-    #videoPlayer
-    [src]="selectedResolution"
-    controls
-    (play)="hideControlsAfterDelay()"
-  ></video>
-  <div
-    class="settings-container"
-    [class.hidden]="hideSettingsMenu"
-    (click)="toggleSettingsMenu()"
-  >
-    ⚙️
+  <div class="menu-container" *ngIf="menuVisible" (mouseleave)="hideMenu()">
+    <div class="menu-header-container">
+      <img
+        src="{{ this.dataService.singleViewer.picture_file }}"
+        alt="viewer picture"
+      />
+      <span>{{ this.dataService.singleViewer.viewername }}</span>
+    </div>
+    <div class="menu-separating-line"></div>
+    <div class="menu-text-content">
+      <p>Konto</p>
+    </div>
+    <div class="menu-text-content" (click)="this.editViewerOpen()">
+      <p>Profil verwalten</p>
+    </div>
+    <div class="menu-separating-line"></div>
+    <div class="menu-text-content" (click)="this.dataService.loadViwerPage()">
+      <p>Profil wechseln</p>
+    </div>
+    <div class="menu-text-content">
+      <p>Ausloggen</p>
+    </div>
   </div>
-  <div *ngIf="showSettingsMenu" class="settings-menu">
+
+  <div (mouseenter)="hideMenu()" class="video-content-container">
+    <div>
+      <h1 *ngIf="this.editMainContentIsActive">Test MAIN</h1>
+    </div>
+    <div *ngIf="this.editViewerIsActive" class="viewer-edit-content-container">
+      <div class="save-viewer-img-container">
+        <img
+          class="save-viewer-user-img"
+          src="{{ this.dataService.randomImgPath }}"
+          alt="avatar"
+        />
+        <img
+          (click)="
+            this.dataService.setRandomImagePath();
+            this.validatioContentEditViewer()
+          "
+          class="save-viewer-change-img"
+          src="/assets/img/change.png"
+          alt="avatar"
+        />
+      </div>
+      <form class="save-viewer-input-container">
+        <input
+          (input)="this.validatioContentEditViewer()"
+          type="text"
+          placeholder="Name"
+          name="viewername"
+          [(ngModel)]="this.dataService.viewername"
+          [class.error]="
+            this.dataService.emptyViewername && !this.dataService.viewername
+          "
+        />
+        <button
+          (click)="this.saveEditViewer()"
+          [disabled]="!this.validationContent"
+          [ngClass]="{
+            'submit-empty-button': !this.validationContent,
+            'submit-button': this.validationContent
+          }"
+          type="submit"
+        >
+          Speichern
+        </button>
+        <button
+          [disabled]="
+            this.dataService.emptyViewername || this.dataService.inputIsEmty
+          "
+          class="submit-button"
+          type="submit"
+        >
+          Abbrechen
+        </button>
+      </form>
+    </div>
+
     <div
-      *ngFor="let res of video.resolutions"
-      class="resolution-option"
-      [ngClass]="{
-        'active-resolution':
-          normalizeUrl(selectedResolution) === normalizeUrl(res.url)
-      }"
-      (click)="changeResolution(res.url)"
+      *ngIf="showVideo"
+      #videoContainer
+      class="video-container"
+      (mouseenter)="showControls()"
+      (mouseleave)="hideControls()"
     >
-      {{ res.label }}
+      <video
+        #videoPlayer
+        [src]="selectedResolution"
+        controls
+        (play)="hideControlsAfterDelay()"
+      ></video>
+      <div
+        class="settings-container"
+        [class.hidden]="hideSettingsMenu"
+        (click)="toggleSettingsMenu()"
+      >
+        ⚙️
+      </div>
+      <div *ngIf="showSettingsMenu" class="settings-menu">
+        <div
+          *ngFor="let res of video.resolutions"
+          class="resolution-option"
+          [ngClass]="{
+            'active-resolution':
+              normalizeUrl(selectedResolution) === normalizeUrl(res.url)
+          }"
+          (click)="changeResolution(res.url)"
+        >
+          {{ res.label }}
+        </div>
+      </div>
     </div>
   </div>
 </div>

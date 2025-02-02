@@ -16,22 +16,6 @@ import { Viewer } from '../../assets/models/viewers.class';
 export class ViewerPageComponent {
   viewerSelectPageActive: boolean = true;
   addViewerPageActive: boolean = false;
-  randomImgPath: String = '';
-  availableImages = [
-    "/assets/img/avatar-1.png",
-    "/assets/img/avatar-2.png",
-    "/assets/img/avatar-3.png",
-    "/assets/img/avatar-4.jpg",
-    "/assets/img/avatar-5.jpg",
-    "/assets/img/avatar-6.png",
-    "/assets/img/avatar-7.jpg",
-    "/assets/img/avatar-8.jpg",
-    "/assets/img/avatar-9.jpg",
-    "/assets/img/avatar-10.jpg"
-  ];
-  viewername: String = '';
-  emptyViewername: Boolean = false;
-  inputIsEmty: Boolean = true;
 
   constructor(public dataService: DataService, private router: Router) { }
 
@@ -87,7 +71,7 @@ export class ViewerPageComponent {
   * Deactivates the viewer selection page.
   */
   addViewer() {
-    this.setRandomImagePath();
+    this.dataService.setRandomImagePath();
     this.viewerSelectPageActive = false;
     this.addViewerPageActive = true;
   }
@@ -97,43 +81,10 @@ export class ViewerPageComponent {
   * Deactivates the add viewer page.
   */
   backToSelectViewer() {
-    this.randomImgPath = '';
-    this.viewername = '';
+    this.dataService.randomImgPath = '';
+    this.dataService.viewername = '';
     this.addViewerPageActive = false;
     this.viewerSelectPageActive = true;
-  }
-
-  /**
-  * Sets a random image path from available images, excluding used ones.
-  * Removes assigned images from the available list.
-  */
-  setRandomImagePath() {
-    if (this.dataService.viewers && Array.isArray(this.dataService.viewers)) {
-      this.dataService.viewers.forEach(viewer => {
-        if (viewer.picture_file && this.availableImages.includes(viewer.picture_file)) {
-          const index = this.availableImages.indexOf(viewer.picture_file);
-          if (index !== -1) {
-            this.availableImages.splice(index, 1);
-          }
-        }
-      });
-    }
-    const randomIndex = Math.floor(Math.random() * this.availableImages.length);
-    this.randomImgPath = this.availableImages[randomIndex];
-  }
-
-  /**
-  * Resets viewer name error states based on the input value.
-  * Updates flags for empty input validation.
-  */
-  resetErrorViewername() {
-    if (this.viewername !== '') {
-      this.emptyViewername = false;
-      this.inputIsEmty = false;
-    } else {
-      this.emptyViewername = true;
-      this.inputIsEmty = true;
-    }
   }
 
   /**
@@ -150,7 +101,7 @@ export class ViewerPageComponent {
             'Content-Type': 'application/json',
             'Authorization': `Token ${this.dataService.user.token}`,
           },
-          body: JSON.stringify({ user: this.dataService.user.user, viewername: this.viewername, picture_file: this.randomImgPath }),
+          body: JSON.stringify({ user: this.dataService.user.user, viewername: this.dataService.viewername, picture_file: this.dataService.randomImgPath }),
         }
       );
       this.saveResponseDataViewerPost(response);

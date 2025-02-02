@@ -1,4 +1,82 @@
 @import "./../../styles.scss";
+@import "./../viewer-page/viewer-page.component.scss";
+
+.video-component-container {
+  background-color: $background-black;
+  height: 100vh;
+  width: 100vw;
+
+  > header {
+    height: 120px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > img {
+      height: 48px;
+      padding-left: 48px;
+      padding-right: 48px;
+      cursor: pointer;
+    }
+    > img:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.img-viewer-header {
+  height: 72px !important;
+  border-radius: 8px;
+}
+
+.menu-container {
+  position: fixed;
+  top: 120px;
+  right: 48px;
+  max-height: 400px;
+  width: 300px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid $gray;
+}
+
+.viewer-edit-content-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 24px;
+}
+
+.menu-header-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: $white;
+  padding: 24px;
+  gap: 16px;
+  font-size: 24px;
+  > img {
+    height: 72px !important;
+    border-radius: 8px;
+  }
+}
+
+.menu-separating-line {
+  height: 1px;
+  width: 100%;
+  background-color: $gray;
+}
+
+.menu-text-content {
+  color: $white;
+  font-size: 24px;
+  padding-left: 24px;
+  cursor: pointer;
+}
+
+.menu-text-content:hover {
+  text-decoration: underline;
+}
 
 .video-container {
   position: fixed;

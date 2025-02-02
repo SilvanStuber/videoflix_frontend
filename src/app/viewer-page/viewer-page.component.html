@@ -35,11 +35,11 @@
     <div class="save-viewer-img-container">
       <img
         class="save-viewer-user-img"
-        src="{{ this.randomImgPath }}"
+        src="{{ this.dataService.randomImgPath }}"
         alt="avatar"
       />
       <img
-        (click)="this.setRandomImagePath()"
+        (click)="this.dataService.setRandomImagePath()"
         class="save-viewer-change-img"
         src="/assets/img/change.png"
         alt="avatar"
@@ -47,19 +47,25 @@
     </div>
     <form class="save-viewer-input-container">
       <input
-        (input)="this.resetErrorViewername()"
+        (input)="this.dataService.resetErrorViewername()"
         type="text"
         placeholder="Name"
         name="viewername"
-        [(ngModel)]="this.viewername"
-        [class.error]="this.emptyViewername && !this.viewername"
+        [(ngModel)]="this.dataService.viewername"
+        [class.error]="
+          this.dataService.emptyViewername && !this.dataService.viewername
+        "
       />
       <button
         (click)="this.saveViewer()"
-        [disabled]="this.emptyViewername || this.inputIsEmty"
+        [disabled]="
+          this.dataService.emptyViewername || this.dataService.inputIsEmty
+        "
         [ngClass]="{
-          'submit-empty-button': this.emptyViewername || this.inputIsEmty,
-          'submit-button': !this.emptyViewername && !this.inputIsEmty
+          'submit-empty-button':
+            this.dataService.emptyViewername || this.dataService.inputIsEmty,
+          'submit-button':
+            !this.dataService.emptyViewername && !this.dataService.inputIsEmty
         }"
         type="submit"
       >
