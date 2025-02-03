@@ -9,6 +9,8 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { User } from '../../assets/models/user.class';
+import { ApiService } from '../service/api.service';
 @Component({
   selector: 'app-video-collection',
   standalone: true,
@@ -17,21 +19,13 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './video-collection.component.scss'
 })
 export class VideoCollectionComponent {
-  idViewer!: number;
-  video: Video = new Video();
-  selectedResolution: string = '';
-  hideSettingsMenu: boolean = false;
-  showSettingsMenu: boolean = false;
-  showVideo: boolean = false;
-  menuVisible: boolean = false;
-  editMainContentIsActive: boolean = true;
-  editViewerIsActive: boolean = false;
-  validationContent: boolean = false;
+
+
 
   @ViewChild('videoContainer') videoContainer!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
-  constructor(public dataService: DataService, private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
+  constructor(public dataService: DataService, public apiService: ApiService, private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
 
   /**
   * Initializes the component, retrieves the viewer ID from the route, 
@@ -41,85 +35,40 @@ export class VideoCollectionComponent {
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
-        this.idViewer = +idParam;
+        this.dataService.idViewer = +idParam;
       }
     });
-
     this.dataService.loadUserFromLocalStorage();
-    this.getViewerData();
-
-    this.loadVideo(10); // Beispiel-Video mit ID 10 abrufen
+    this.apiService.getViewerData();
+    this.loadVideo(10);
   }
 
   showMenu() {
-    this.menuVisible = true;
+    this.dataService.menuVisible = true;
   }
 
   hideMenu() {
-    this.menuVisible = false;
+    this.dataService.menuVisible = false;
   }
 
   backToMainPage() {
-    this.router.navigate(['/video-collection', this.idViewer]);
+    this.router.navigate(['/video-collection', this.dataService.idViewer]);
   }
 
   editViewerOpen() {
-    this.resetBooleanOfConten();
+    this.dataService.resetBooleanOfConten();
     this.dataService.viewername = this.dataService.singleViewer.viewername
     this.dataService.randomImgPath = String(this.dataService.singleViewer.picture_file);
-    this.editViewerIsActive = true;
+    this.dataService.editViewerIsActive = true;
 
   }
 
-  resetBooleanOfConten() {
-    this.editMainContentIsActive = false;
-    this.menuVisible = false;
-    this.showVideo = false;
-    this.editViewerIsActive = false;
-  }
-
-  /**
-  * Fetches viewer data from the API and handles the response or errors.
-  */
-  async getViewerData() {
-    try {
-      const response = await fetch(`${this.dataService.API_BASE_URL}viewer/${this.idViewer}/`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${this.dataService.user.token}`,
-        },
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        this.dataService.wrongData = errorData.detail || 'Fehler beim Abrufen der Daten.';
-        return;
-      }
-      const responseData = await response.json();
-      this.saveResponseDataViewerGet(responseData);
-    } catch (error) {
-      this.dataService.wrongData = 'Keine Daten erhalten.';
-    }
-  }
-
-  /**
-   * Processes the API response after saving a viewer and updates the viewer list.
-   * Handles errors or resets to the viewer selection page on success.
-   */
-  saveResponseDataViewerGet(responseData: any) {
-    if (responseData) {
-      this.dataService.singleViewer = new Viewer(responseData);
-    } else {
-      this.dataService.wrongData = 'Keine Daten erhalten.';
-    }
-  }
 
 
   getVideo(videoId: number): Observable<Video> {
     const headers = new HttpHeaders({
       'Authorization': `Token ${this.dataService.user.token}`
     });
-
     return this.http.get(`${this.dataService.API_BASE_URL}videos/single-video/${videoId}/`, { headers }).pipe(
       map(data => new Video(data)),
     );
@@ -127,10 +76,9 @@ export class VideoCollectionComponent {
 
   loadVideo(videoId: number): void {
     this.getVideo(videoId).subscribe(video => {
-      this.video = video;
+      this.dataService.video = video;
       const resolveUrl = (path: string) => path.startsWith('http') ? path : `${this.dataService.API_VIDEO_URL}${path}`;
-
-      this.selectedResolution =
+      this.dataService.selectedResolution =
         resolveUrl(video.video_480p) ||
         resolveUrl(video.video_720p) ||
         resolveUrl(video.video_1080p);
@@ -142,17 +90,11 @@ export class VideoCollectionComponent {
 
 
   changeResolution(url: string) {
-    this.selectedResolution = url.startsWith('http')
+    this.dataService.selectedResolution = url.startsWith('http')
       ? url
       : `${this.dataService.API_VIDEO_URL}${url}`;
-    this.showSettingsMenu = false;
+    this.dataService.showSettingsMenu = false;
   }
-
-
-
-
-
-
 
   normalizeUrl(url: string): string {
     if (!url) return '';
@@ -168,26 +110,26 @@ export class VideoCollectionComponent {
   @HostListener('document:click', ['$event'])
   closeMenuOnClickOutside(event: Event) {
     if (!event.target || !(event.target as HTMLElement).closest('.settings-container')) {
-      this.showSettingsMenu = false;
+      this.dataService.showSettingsMenu = false;
     }
   }
 
   toggleSettingsMenu() {
-    this.showSettingsMenu = !this.showSettingsMenu;
+    this.dataService.showSettingsMenu = !this.dataService.showSettingsMenu;
   }
 
   hideControlsAfterDelay() {
-    this.hideSettingsMenu = true;
+    this.dataService.hideSettingsMenu = true;
   }
 
   showControls() {
-    this.hideSettingsMenu = false;
+    this.dataService.hideSettingsMenu = false;
   }
 
   hideControls() {
     if (!this.videoPlayer.nativeElement.paused) {
-      this.hideSettingsMenu = true;
-      if (this.showSettingsMenu) {
+      this.dataService.hideSettingsMenu = true;
+      if (this.dataService.showSettingsMenu) {
         this.toggleSettingsMenu();
       }
 
@@ -195,68 +137,67 @@ export class VideoCollectionComponent {
   }
 
   validatioContentEditViewer() {
-    this.validationContent = false;
+    this.dataService.validationContent = false;
     if (this.dataService.viewername !== '') {
       if (this.dataService.viewername !== this.dataService.singleViewer.viewername) {
-        this.validationContent = true;
+        this.dataService.validationContent = true;
       }
     }
     if (this.dataService.randomImgPath !== this.dataService.singleViewer.picture_file) {
-      this.validationContent = true;
+      this.dataService.validationContent = true;
     }
 
   }
+
+  openEditeInputUsername() {
+    this.dataService.closeEditeInput();
+    this.dataService.inputUserEditIsActive = true;
+  }
+
+  openEditeInputEmail() {
+    this.dataService.closeEditeInput();
+    this.dataService.inputEmailEditIsActive = true;
+  }
+
+
+
+
+  validatioContentEditUser() {
+    this.dataService.validationContentUser = false;
+    if (this.dataService.userName !== '') {
+      if (this.dataService.userName !== this.dataService.user.username) {
+        this.dataService.validationContentUser = true;
+      }
+    }
+    if (this.dataService.email !== '') {
+      if (this.dataService.email !== this.dataService.user.email) {
+        this.dataService.validationContentUser = true;
+      }
+    }
+  }
+
+  saveEditUser() {
+    if (this.dataService.validationContentUser) {
+      if (this.dataService.userName === '') {
+        this.dataService.userName = this.dataService.user.username;
+      }
+      if (this.dataService.email === '') {
+        this.dataService.email = this.dataService.user.email;
+      }
+      this.apiService.saveEditeUserOnAPI();
+    }
+  }
+
+
+
 
   saveEditViewer() {
-    console.log("    this.dataService.randomImgPath !==this.dataService.singleViewer.picture_file", this.dataService.randomImgPath !==
-      this.dataService.singleViewer.picture_file)
-    if (this.validationContent) {
-      this.saveViewer();
-      this.validationContent = false;
+    if (this.dataService.validationContent) {
+      this.apiService.saveViewer();
+      this.dataService.validationContent = false;
     }
   }
 
-  /**
- * Edit viewer to the API and processes the response.
- * Handles errors with a default error message.
- */
-  async saveViewer() {
-    try {
-      const response = await fetch(
-        `${this.dataService.API_BASE_URL}viewer/${this.dataService.singleViewer.viewer_id}/`,
-        {
-          method: "PATCH",
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${this.dataService.user.token}`,
-          },
-          body: JSON.stringify({ user: this.dataService.user.user, viewername: this.dataService.viewername, picture_file: this.dataService.randomImgPath }),
-        }
-      );
-      this.saveResponseDataViewerPatch(response);
-    } catch (error) {
-      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
-    }
-  }
 
-  /**
-* Processes the API response after saving a viewer and updates the viewer list.
-* Handles errors or resets to the viewer selection page on success.
-*/
-  async saveResponseDataViewerPatch(response: Response) {
-    const responseData: any = await response.json();
-    if (!response.ok) {
-      this.dataService.wrongData = responseData.detail;
-      return;
-    }
-    if (responseData) {
-      this.dataService.singleViewer = new Viewer(responseData);
-      this.resetBooleanOfConten();
-      this.editMainContentIsActive = true;
-    } else {
-      this.dataService.wrongData = 'Keine Daten erhalten.';
-    }
-  }
 }
-
 

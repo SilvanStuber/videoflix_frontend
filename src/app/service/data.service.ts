@@ -3,6 +3,7 @@ import { User } from '../../assets/models/user.class';
 import { Viewer } from '../../assets/models/viewers.class';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Video } from '../../assets/models/video.class';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,25 @@ export class DataService {
   emptyViewername: Boolean = false;
   inputIsEmty: Boolean = true;
   randomImgPath: String = '';
+  idViewer!: number;
+  inputUserEditIsActive: boolean = false;
+  inputEmailEditIsActive: boolean = false;
+  mainContentIsActive: boolean = false;
+  video: Video = new Video();
+  selectedResolution: string = '';
+  hideSettingsMenu: boolean = false;
+  showSettingsMenu: boolean = false;
+  showVideo: boolean = false;
+  menuVisible: boolean = false;
+  editViewerIsActive: boolean = false;
+  validationContent: boolean = false;
+  validationContentUser: boolean = false;
+  editUserIsActive: boolean = true;
+  uid: string | null = null;
+  token: string | null = null;
+  repeatedPassword: string = '';
+  passwordResetVisible: boolean = false;
+  passwordRepeatedResetVisible: boolean = false;
   private pageState = {
     loginPageActive: false,
     emailRequestHasBeenSent: false,
@@ -159,6 +179,7 @@ export class DataService {
   * Saves the authenticated user data to local storage.
   */
   saveUserToLocalStorage() {
+    console.log("fkfkpfokpkfkf", this.user)
     localStorage.setItem('user', JSON.stringify({
       token: this.user.token,
       user: this.user.user,
@@ -167,9 +188,6 @@ export class DataService {
       last_name: this.user.last_name,
       email: this.user.email
     }));
-    if (this.user.token) {
-      this.loadViwerPage();
-    }
   }
 
   /**
@@ -194,7 +212,6 @@ export class DataService {
       console.warn('No user data found in local storage.');
     }
   }
-
 
   /**
   * Generates the request body for user registration.
@@ -291,6 +308,12 @@ export class DataService {
     this.privacyPolicyAccept = false;
   }
 
+  closeEditeInput() {
+    this.resetInputString();
+    this.inputUserEditIsActive = false;
+    this.inputEmailEditIsActive = false;
+  }
+
   /**
 * Sets a random image path from available images, excluding used ones.
 * Removes assigned images from the available list.
@@ -322,6 +345,13 @@ export class DataService {
       this.emptyViewername = true;
       this.inputIsEmty = true;
     }
+  }
+
+  resetBooleanOfConten() {
+    this.mainContentIsActive = false;
+    this.menuVisible = false;
+    this.showVideo = false;
+    this.editViewerIsActive = false;
   }
 }
 

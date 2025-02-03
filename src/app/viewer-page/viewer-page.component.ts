@@ -56,7 +56,7 @@ export class ViewerPageComponent {
   async saveDataLoadViewer(response: Response) {
     const responseData: any = await response.json();
     if (!response.ok) {
-      this.dataService.wrongData = responseData.detail;
+      this.dataService.wrongData = responseData.error;
       return;
     }
     if (responseData && Array.isArray(responseData)) {
@@ -117,7 +117,7 @@ export class ViewerPageComponent {
   async saveResponseDataViewerPost(response: Response) {
     const responseData: any = await response.json();
     if (!response.ok) {
-      this.dataService.wrongData = responseData.detail;
+      this.dataService.wrongData = responseData.error;
       return;
     }
     if (responseData && Array.isArray(responseData)) {

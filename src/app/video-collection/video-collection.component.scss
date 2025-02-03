@@ -165,6 +165,82 @@
   color: white;
 }
 
+.edit-user-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  color: $white;
+  padding-left: 30%;
+
+  height: 70vh;
+}
+
+.edit-user-content-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  height: 120px;
+  gap: 24px;
+  > p {
+    font-size: 24px;
+  }
+  > img {
+    height: 24px;
+    cursor: pointer;
+  }
+  > img:hover {
+    transform: scale(1.2);
+  }
+}
+
+.edit-user-input-content-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  height: 120px;
+  gap: 24px;
+  margin-bottom: -72px;
+  > p {
+    font-size: 24px;
+  }
+}
+
+.edit-user-error-text {
+  margin-top: -20px;
+  color: $red;
+  font-size: 14px;
+}
+
+.edit-user-content-input {
+  border: 2px solid $white;
+  border-radius: 8px;
+  color: $white;
+  background-color: transparent;
+  padding: 10px;
+  outline: none;
+  transition: border-color 0.3s ease, color 0.3s ease;
+  width: 420px;
+  height: 24px;
+  font-size: 18px;
+  padding-left: 12px;
+
+  &::placeholder {
+    color: rgba($white, 0.4);
+  }
+
+  &:focus {
+    border-color: lighten($white, 20%);
+  }
+}
+
+.cursor-default {
+  cursor: default !important;
+  transform: none !important;
+}
+
 @media (max-width: 1440px) {
   .settings-container {
     right: 142px;
@@ -175,5 +251,26 @@
   .settings-menu {
     bottom: 60px;
     right: 142px;
+  }
+}
+
+@media (max-width: 600px) {
+  .video-component-container {
+    > header {
+      > img {
+        padding-left: 12px;
+        padding-right: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .img-viewer-header {
+    height: 48px !important;
+  }
+
+  .menu-container {
+    top: 100px;
+    right: 24px;
   }
 }

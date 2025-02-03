@@ -13,7 +13,11 @@
     />
   </header>
 
-  <div class="menu-container" *ngIf="menuVisible" (mouseleave)="hideMenu()">
+  <div
+    class="menu-container"
+    *ngIf="this.dataService.menuVisible"
+    (mouseleave)="hideMenu()"
+  >
     <div class="menu-header-container">
       <img
         src="{{ this.dataService.singleViewer.picture_file }}"
@@ -39,9 +43,150 @@
 
   <div (mouseenter)="hideMenu()" class="video-content-container">
     <div>
-      <h1 *ngIf="this.editMainContentIsActive">Test MAIN</h1>
+      <h1 *ngIf="this.dataService.mainContentIsActive">Test MAIN</h1>
     </div>
-    <div *ngIf="this.editViewerIsActive" class="viewer-edit-content-container">
+
+    <div *ngIf="this.dataService.editUserIsActive" class="edit-user-container">
+      <div class="edit-user-content-container">
+        <p>Benutzername:</p>
+        <p *ngIf="!this.dataService.inputUserEditIsActive">
+          {{ this.dataService.user.username }}
+        </p>
+        <div class="edit-user-input-content-container">
+          <input
+            *ngIf="this.dataService.inputUserEditIsActive"
+            (input)="this.validatioContentEditUser()"
+            type="text"
+            placeholder="{{ this.dataService.user.username }}"
+            name="userrname"
+            class="edit-user-content-input"
+            [(ngModel)]="this.dataService.userName"
+          />
+          <p
+            class="edit-user-error-text"
+            *ngIf="
+              this.dataService.wrongData &&
+              this.dataService.inputUserEditIsActive
+            "
+          >
+            {{ this.dataService.wrongData }}
+          </p>
+        </div>
+        <img
+          *ngIf="!this.dataService.inputUserEditIsActive"
+          (click)="this.openEditeInputUsername()"
+          src="/assets/img/pen.png"
+          alt="pen picture"
+        />
+        <img
+          *ngIf="
+            this.dataService.inputUserEditIsActive &&
+            !this.dataService.validationContentUser
+          "
+          (click)="this.openEditeInputUsername()"
+          src="/assets/img/check-gray.png"
+          alt="check gray picture"
+          [ngClass]="{
+            'cursor-default':
+              this.dataService.inputUserEditIsActive &&
+              !this.dataService.validationContentUser
+          }"
+        />
+        <img
+          *ngIf="
+            this.dataService.inputUserEditIsActive &&
+            this.dataService.validationContentUser
+          "
+          (click)="this.saveEditUser()"
+          src="/assets/img/check-white.png"
+          alt="check white picture"
+        />
+        <img
+          *ngIf="this.dataService.inputUserEditIsActive"
+          (click)="this.dataService.closeEditeInput()"
+          src="/assets/img/cross-white.png"
+          alt="cross picture"
+        />
+      </div>
+
+      <div class="edit-user-content-container">
+        <p>E-Mail:</p>
+        <p *ngIf="!this.dataService.inputEmailEditIsActive">
+          {{ this.dataService.user.email }}
+        </p>
+        <div class="edit-user-input-content-container">
+          <input
+            *ngIf="this.dataService.inputEmailEditIsActive"
+            (input)="this.validatioContentEditUser()"
+            type="text"
+            placeholder="{{ this.dataService.user.email }}"
+            name="email"
+            class="edit-user-content-input"
+            [(ngModel)]="this.dataService.email"
+          />
+          <p
+            class="edit-user-error-text"
+            *ngIf="
+              this.dataService.wrongData &&
+              this.dataService.inputEmailEditIsActive
+            "
+          >
+            {{ this.dataService.wrongData }}
+          </p>
+        </div>
+
+        <img
+          *ngIf="!this.dataService.inputEmailEditIsActive"
+          (click)="this.openEditeInputEmail()"
+          src="/assets/img/pen.png"
+          alt="pen picture"
+        />
+        <img
+          *ngIf="
+            this.dataService.inputEmailEditIsActive &&
+            !this.dataService.validationContentUser
+          "
+          (click)="this.openEditeInputUsername()"
+          src="/assets/img/check-gray.png"
+          alt="check gray picture"
+          [ngClass]="{
+            'cursor-default':
+              this.dataService.inputEmailEditIsActive &&
+              !this.dataService.validationContentUser
+          }"
+        />
+        <img
+          *ngIf="
+            this.dataService.inputEmailEditIsActive &&
+            this.dataService.validationContentUser
+          "
+          (click)="this.saveEditUser()"
+          src="/assets/img/check-white.png"
+          alt="check white picture"
+        />
+        <img
+          *ngIf="this.dataService.inputEmailEditIsActive"
+          (click)="this.dataService.closeEditeInput()"
+          src="/assets/img/cross-white.png"
+          alt="cross picture"
+        />
+      </div>
+
+      <div class="edit-user-content-container">
+        <p>Passwort:</p>
+        <p>************</p>
+        <img
+          (click)="this.openEditeInputUsername()"
+          src="/assets/img/pen.png"
+          alt="pen picture"
+        />
+      </div>
+    </div>
+
+    <div
+      *ngIf="this.dataService.editViewerIsActive"
+      class="viewer-edit-content-container"
+    >
       <div class="save-viewer-img-container">
         <img
           class="save-viewer-user-img"
@@ -65,16 +210,13 @@
           placeholder="Name"
           name="viewername"
           [(ngModel)]="this.dataService.viewername"
-          [class.error]="
-            this.dataService.emptyViewername && !this.dataService.viewername
-          "
         />
         <button
           (click)="this.saveEditViewer()"
-          [disabled]="!this.validationContent"
+          [disabled]="!this.dataService.validationContent"
           [ngClass]="{
-            'submit-empty-button': !this.validationContent,
-            'submit-button': this.validationContent
+            'submit-empty-button': !this.dataService.validationContent,
+            'submit-button': this.dataService.validationContent
           }"
           type="submit"
         >
@@ -93,7 +235,7 @@
     </div>
 
     <div
-      *ngIf="showVideo"
+      *ngIf="this.dataService.showVideo"
       #videoContainer
       class="video-container"
       (mouseenter)="showControls()"
@@ -101,24 +243,25 @@
     >
       <video
         #videoPlayer
-        [src]="selectedResolution"
+        [src]="this.dataService.selectedResolution"
         controls
         (play)="hideControlsAfterDelay()"
       ></video>
       <div
         class="settings-container"
-        [class.hidden]="hideSettingsMenu"
+        [class.hidden]="this.dataService.hideSettingsMenu"
         (click)="toggleSettingsMenu()"
       >
         ⚙️
       </div>
-      <div *ngIf="showSettingsMenu" class="settings-menu">
+      <div *ngIf="this.dataService.showSettingsMenu" class="settings-menu">
         <div
-          *ngFor="let res of video.resolutions"
+          *ngFor="let res of this.dataService.video.resolutions"
           class="resolution-option"
           [ngClass]="{
             'active-resolution':
-              normalizeUrl(selectedResolution) === normalizeUrl(res.url)
+              normalizeUrl(this.dataService.selectedResolution) ===
+              normalizeUrl(res.url)
           }"
           (click)="changeResolution(res.url)"
         >

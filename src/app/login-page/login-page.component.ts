@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { User } from '../../assets/models/user.class';
 import { DataService } from '../service/data.service';
 import { Router } from '@angular/router';
+import { ApiService } from '../service/api.service';
 
 @Component({
   selector: 'app-login-page',
@@ -14,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPageComponent {
 
-  constructor(public dataService: DataService, private router: Router) { }
+  constructor(public dataService: DataService, public apiService: ApiService, private router: Router) { }
 
   /**
    * Initializes the component by loading login data.
@@ -24,8 +25,8 @@ export class LoginPageComponent {
   }
 
   /**
-   * Handles the login process by validating input fields.
-   */
+  * Handles the login process by validating input fields.
+  */
   async login() {
     if (!this.dataService.emailOrUsername) {
       this.dataService.emptyEmailOrUsername = true;
@@ -35,33 +36,8 @@ export class LoginPageComponent {
       this.dataService.emptyPassword = true;
       return;
     } else {
-      await this.loginOnApi();
+      await this.apiService.loginOnApi();
       this.handleLoginSuccess();
-    }
-  }
-
-  /**
-   * Sends a login request to the API and processes the response.
-   */
-  async loginOnApi() {
-    try {
-      const response = await fetch(`${this.dataService.API_BASE_URL}login/`, {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username_or_email: this.dataService.emailOrUsername, password: this.dataService.password }),
-      });
-      const responseData = await response.json();
-      if (!response.ok) {
-        this.dataService.wrongData = responseData.detail;
-      }
-      if (responseData && responseData.token) {
-        this.dataService.user = new User(responseData);
-        this.dataService.saveUserToLocalStorage();
-      } else {
-        this.dataService.wrongData = responseData.detail;
-      }
-    } catch (error) {
-      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
     }
   }
 
