@@ -24,13 +24,14 @@ export class ApiService {
       });
       const responseData = await response.json();
       if (!response.ok) {
-        this.dataService.wrongData = responseData.error;
+        this.dataService.wrongData = responseData.detail;
+        return
       }
       if (responseData && responseData.token) {
         this.dataService.user = new User(responseData);
         this.dataService.saveUserToLocalStorage();
       } else {
-        this.dataService.wrongData = responseData.error;
+        this.dataService.wrongData = responseData.detail;
       }
       if (this.dataService.user.token) {
         this.dataService.loadViwerPage();

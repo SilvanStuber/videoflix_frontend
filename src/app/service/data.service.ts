@@ -352,6 +352,7 @@ export class DataService {
     this.menuVisible = false;
     this.showVideo = false;
     this.editViewerIsActive = false;
+    this.editUserIsActive = false;
   }
 }
 

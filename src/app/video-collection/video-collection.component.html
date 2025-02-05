@@ -26,14 +26,14 @@
       <span>{{ this.dataService.singleViewer.viewername }}</span>
     </div>
     <div class="menu-separating-line"></div>
-    <div class="menu-text-content">
+    <div class="menu-text-content" (click)="this.editUserOpen()">
       <p>Konto</p>
     </div>
     <div class="menu-text-content" (click)="this.editViewerOpen()">
       <p>Profil verwalten</p>
     </div>
     <div class="menu-separating-line"></div>
-    <div class="menu-text-content" (click)="this.dataService.loadViwerPage()">
+    <div class="menu-text-content" (click)="this.switchViewer()">
       <p>Profil wechseln</p>
     </div>
     <div class="menu-text-content">
@@ -47,139 +47,153 @@
     </div>
 
     <div *ngIf="this.dataService.editUserIsActive" class="edit-user-container">
-      <div class="edit-user-content-container">
-        <p>Benutzername:</p>
-        <p *ngIf="!this.dataService.inputUserEditIsActive">
-          {{ this.dataService.user.username }}
-        </p>
-        <div class="edit-user-input-content-container">
-          <input
-            *ngIf="this.dataService.inputUserEditIsActive"
-            (input)="this.validatioContentEditUser()"
-            type="text"
-            placeholder="{{ this.dataService.user.username }}"
-            name="userrname"
-            class="edit-user-content-input"
-            [(ngModel)]="this.dataService.userName"
-          />
+      <div>
+        <div class="edit-user-content-container">
           <p
-            class="edit-user-error-text"
-            *ngIf="
-              this.dataService.wrongData &&
-              this.dataService.inputUserEditIsActive
-            "
+            [ngClass]="{
+              'd-none': this.dataService.inputUserEditIsActive
+            }"
           >
-            {{ this.dataService.wrongData }}
+            Benutzername:
           </p>
-        </div>
-        <img
-          *ngIf="!this.dataService.inputUserEditIsActive"
-          (click)="this.openEditeInputUsername()"
-          src="/assets/img/pen.png"
-          alt="pen picture"
-        />
-        <img
-          *ngIf="
-            this.dataService.inputUserEditIsActive &&
-            !this.dataService.validationContentUser
-          "
-          (click)="this.openEditeInputUsername()"
-          src="/assets/img/check-gray.png"
-          alt="check gray picture"
-          [ngClass]="{
-            'cursor-default':
+          <p *ngIf="!this.dataService.inputUserEditIsActive">
+            {{ this.dataService.user.username }}
+          </p>
+          <div class="edit-user-input-content-container">
+            <input
+              *ngIf="this.dataService.inputUserEditIsActive"
+              (input)="this.validatioContentEditUser()"
+              type="text"
+              placeholder="{{ this.dataService.user.username }}"
+              name="userrname"
+              class="edit-user-content-input"
+              [(ngModel)]="this.dataService.userName"
+            />
+            <p
+              class="edit-user-error-text"
+              *ngIf="
+                this.dataService.wrongData &&
+                this.dataService.inputUserEditIsActive
+              "
+            >
+              {{ this.dataService.wrongData }}
+            </p>
+          </div>
+          <img
+            *ngIf="!this.dataService.inputUserEditIsActive"
+            (click)="this.openEditeInputUsername()"
+            src="/assets/img/pen.png"
+            alt="pen picture"
+          />
+          <img
+            *ngIf="
               this.dataService.inputUserEditIsActive &&
               !this.dataService.validationContentUser
-          }"
-        />
-        <img
-          *ngIf="
-            this.dataService.inputUserEditIsActive &&
-            this.dataService.validationContentUser
-          "
-          (click)="this.saveEditUser()"
-          src="/assets/img/check-white.png"
-          alt="check white picture"
-        />
-        <img
-          *ngIf="this.dataService.inputUserEditIsActive"
-          (click)="this.dataService.closeEditeInput()"
-          src="/assets/img/cross-white.png"
-          alt="cross picture"
-        />
-      </div>
-
-      <div class="edit-user-content-container">
-        <p>E-Mail:</p>
-        <p *ngIf="!this.dataService.inputEmailEditIsActive">
-          {{ this.dataService.user.email }}
-        </p>
-        <div class="edit-user-input-content-container">
-          <input
-            *ngIf="this.dataService.inputEmailEditIsActive"
-            (input)="this.validatioContentEditUser()"
-            type="text"
-            placeholder="{{ this.dataService.user.email }}"
-            name="email"
-            class="edit-user-content-input"
-            [(ngModel)]="this.dataService.email"
-          />
-          <p
-            class="edit-user-error-text"
-            *ngIf="
-              this.dataService.wrongData &&
-              this.dataService.inputEmailEditIsActive
             "
-          >
-            {{ this.dataService.wrongData }}
-          </p>
+            (click)="this.openEditeInputUsername()"
+            src="/assets/img/check-gray.png"
+            alt="check gray picture"
+            [ngClass]="{
+              'cursor-default':
+                this.dataService.inputUserEditIsActive &&
+                !this.dataService.validationContentUser
+            }"
+          />
+          <img
+            *ngIf="
+              this.dataService.inputUserEditIsActive &&
+              this.dataService.validationContentUser
+            "
+            (click)="this.saveEditUser()"
+            src="/assets/img/check-white.png"
+            alt="check white picture"
+          />
+          <img
+            *ngIf="this.dataService.inputUserEditIsActive"
+            (click)="this.dataService.closeEditeInput()"
+            src="/assets/img/cross-white.png"
+            alt="cross picture"
+          />
         </div>
 
-        <img
-          *ngIf="!this.dataService.inputEmailEditIsActive"
-          (click)="this.openEditeInputEmail()"
-          src="/assets/img/pen.png"
-          alt="pen picture"
-        />
-        <img
-          *ngIf="
-            this.dataService.inputEmailEditIsActive &&
-            !this.dataService.validationContentUser
-          "
-          (click)="this.openEditeInputUsername()"
-          src="/assets/img/check-gray.png"
-          alt="check gray picture"
-          [ngClass]="{
-            'cursor-default':
+        <div class="edit-user-content-container">
+          <p
+            [ngClass]="{
+              'd-none': this.dataService.inputEmailEditIsActive
+            }"
+          >
+            E-Mail:
+          </p>
+          <p *ngIf="!this.dataService.inputEmailEditIsActive">
+            {{ this.dataService.user.email }}
+          </p>
+          <div class="edit-user-input-content-container">
+            <input
+              *ngIf="this.dataService.inputEmailEditIsActive"
+              (input)="this.validatioContentEditUser()"
+              type="text"
+              placeholder="{{ this.dataService.user.email }}"
+              name="email"
+              class="edit-user-content-input"
+              [(ngModel)]="this.dataService.email"
+            />
+            <p
+              class="edit-user-error-text"
+              *ngIf="
+                this.dataService.wrongData &&
+                this.dataService.inputEmailEditIsActive
+              "
+            >
+              {{ this.dataService.wrongData }}
+            </p>
+          </div>
+
+          <img
+            *ngIf="!this.dataService.inputEmailEditIsActive"
+            (click)="this.openEditeInputEmail()"
+            src="/assets/img/pen.png"
+            alt="pen picture"
+          />
+          <img
+            *ngIf="
               this.dataService.inputEmailEditIsActive &&
               !this.dataService.validationContentUser
-          }"
-        />
-        <img
-          *ngIf="
-            this.dataService.inputEmailEditIsActive &&
-            this.dataService.validationContentUser
-          "
-          (click)="this.saveEditUser()"
-          src="/assets/img/check-white.png"
-          alt="check white picture"
-        />
-        <img
-          *ngIf="this.dataService.inputEmailEditIsActive"
-          (click)="this.dataService.closeEditeInput()"
-          src="/assets/img/cross-white.png"
-          alt="cross picture"
-        />
-      </div>
+            "
+            (click)="this.openEditeInputUsername()"
+            src="/assets/img/check-gray.png"
+            alt="check gray picture"
+            [ngClass]="{
+              'cursor-default':
+                this.dataService.inputEmailEditIsActive &&
+                !this.dataService.validationContentUser
+            }"
+          />
+          <img
+            *ngIf="
+              this.dataService.inputEmailEditIsActive &&
+              this.dataService.validationContentUser
+            "
+            (click)="this.saveEditUser()"
+            src="/assets/img/check-white.png"
+            alt="check white picture"
+          />
+          <img
+            *ngIf="this.dataService.inputEmailEditIsActive"
+            (click)="this.dataService.closeEditeInput()"
+            src="/assets/img/cross-white.png"
+            alt="cross picture"
+          />
+        </div>
 
-      <div class="edit-user-content-container">
-        <p>Passwort:</p>
-        <p>************</p>
-        <img
-          (click)="this.openEditeInputUsername()"
-          src="/assets/img/pen.png"
-          alt="pen picture"
-        />
+        <div class="edit-user-content-container">
+          <p>Passwort:</p>
+          <p>************</p>
+          <img
+            (click)="this.openEditeInputUsername()"
+            src="/assets/img/pen.png"
+            alt="pen picture"
+          />
+        </div>
       </div>
     </div>
 

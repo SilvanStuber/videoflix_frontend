@@ -63,6 +63,17 @@ export class VideoCollectionComponent {
 
   }
 
+  editUserOpen() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.editUserIsActive = true;
+  }
+
+  switchViewer() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.mainContentIsActive = true;
+    this.dataService.loadViwerPage()
+  }
+
 
 
   getVideo(videoId: number): Observable<Video> {
