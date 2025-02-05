@@ -1,5 +1,6 @@
 @import "./../../styles.scss";
 @import "./../viewer-page/viewer-page.component.scss";
+@import "./../login-page/login-page.component.scss";
 
 .video-component-container {
   background-color: $background-black;
@@ -238,6 +239,28 @@
 .cursor-default {
   cursor: default !important;
   transform: none !important;
+}
+
+.edite-password-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 80px;
+}
+
+.edite-password-content-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  max-width: 450px;
+  width: 100%;
+  height: 100%;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 @media (max-width: 1440px) {

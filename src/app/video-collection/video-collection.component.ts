@@ -74,7 +74,83 @@ export class VideoCollectionComponent {
     this.dataService.loadViwerPage()
   }
 
+  openEditePassword() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.editPasswordIsActive = true;
+  }
 
+  /**
+  * Toggles the visibility of the password input field.
+  */
+  toggleEditeOldPasswordVisibility() {
+    this.dataService.editeOldPasswordVisible = !this.dataService.editeOldPasswordVisible;
+  }
+
+  /**
+  * Toggles the visibility of the password input field.
+  */
+  toggleEditePasswordVisibility() {
+    this.dataService.editePasswordVisible = !this.dataService.editePasswordVisible;
+  }
+
+  /**
+  * Toggles the visibility of the password input field.
+  */
+  toggleEditeRepeatedPasswordVisibility() {
+    this.dataService.editeRepeatedPasswordVisible = !this.dataService.editeRepeatedPasswordVisible;
+  }
+
+  resetErrorOldPassword() {
+    if (this.dataService.editOldPasswordInput !== '') {
+      this.dataService.emptyEditOldPasswordInput = false;
+      if (this.dataService.editNewPasswordInput !== '' && this.dataService.editRepeatedPasswordInput !== '') {
+        this.dataService.passwortEditeInputIsEmpty = false;
+      } else {
+        this.dataService.passwortEditeInputIsEmpty = true;
+      }
+    } else {
+      this.dataService.passwortEditeInputIsEmpty = true;
+      this.dataService.emptyEditOldPasswordInput = true;
+    }
+  }
+
+  resetErrorNewPassword() {
+    if (this.dataService.editNewPasswordInput !== '') {
+      this.dataService.emptyEditNewPasswordInput = false;
+      if (this.dataService.editOldPasswordInput !== '' && this.dataService.editRepeatedPasswordInput !== '') {
+        this.dataService.passwortEditeInputIsEmpty = false;
+      } else {
+        this.dataService.passwortEditeInputIsEmpty = true;
+      }
+    } else {
+      this.dataService.passwortEditeInputIsEmpty = true;
+      this.dataService.emptyEditNewPasswordInput = true;
+    }
+  }
+
+  resetErrorRepeatedPassword() {
+    if (this.dataService.editRepeatedPasswordInput !== '') {
+      this.dataService.emptyEditRepeatedPasswordInput = false;
+      if (this.dataService.editNewPasswordInput !== '' && this.dataService.editOldPasswordInput !== '') {
+        this.dataService.passwortEditeInputIsEmpty = false;
+      } else {
+        this.dataService.passwortEditeInputIsEmpty = true;
+      }
+      if (this.dataService.editNewPasswordInput === this.dataService.editRepeatedPasswordInput) {
+        this.dataService.preparedPasswordsMatch = true;
+      } else {
+        this.dataService.preparedPasswordsMatch = false;
+      }
+    } else {
+      this.dataService.passwortEditeInputIsEmpty = true;
+      this.dataService.emptyEditRepeatedPasswordInput = true;
+    }
+  }
+
+  closeEditePassword() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.editUserIsActive = true;
+  }
 
   getVideo(videoId: number): Observable<Video> {
     const headers = new HttpHeaders({

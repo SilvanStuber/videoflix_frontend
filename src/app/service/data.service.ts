@@ -69,12 +69,24 @@ export class DataService {
   editViewerIsActive: boolean = false;
   validationContent: boolean = false;
   validationContentUser: boolean = false;
-  editUserIsActive: boolean = true;
+  editUserIsActive: boolean = false;
+  editPasswordIsActive: boolean = true;
   uid: string | null = null;
   token: string | null = null;
   repeatedPassword: string = '';
   passwordResetVisible: boolean = false;
   passwordRepeatedResetVisible: boolean = false;
+  editeOldPasswordVisible: boolean = false;
+  editePasswordVisible: boolean = false;
+  editeRepeatedPasswordVisible: boolean = false;
+  editOldPasswordInput: string = '';
+  emptyEditOldPasswordInput: boolean = false;
+  editNewPasswordInput: string = '';
+  emptyEditNewPasswordInput: boolean = false;
+  editRepeatedPasswordInput: string = '';
+  emptyEditRepeatedPasswordInput: boolean = false;
+  passwortEditeInputIsEmpty: boolean = false;
+  preparedPasswordsMatch: boolean = false;
   private pageState = {
     loginPageActive: false,
     emailRequestHasBeenSent: false,
@@ -353,6 +365,7 @@ export class DataService {
     this.showVideo = false;
     this.editViewerIsActive = false;
     this.editUserIsActive = false;
+    this.editPasswordIsActive = false;
   }
 }
 

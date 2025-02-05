@@ -189,11 +189,155 @@
           <p>Passwort:</p>
           <p>************</p>
           <img
-            (click)="this.openEditeInputUsername()"
+            (click)="this.openEditePassword()"
             src="/assets/img/pen.png"
             alt="pen picture"
           />
         </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="this.dataService.editPasswordIsActive"
+      class="edite-password-container"
+    >
+      <div class="edite-password-content-container">
+        <div class="password-container">
+          <input
+            (input)="this.resetErrorOldPassword()"
+            [type]="
+              this.dataService.editeOldPasswordVisible ? 'text' : 'password'
+            "
+            placeholder="Altes Passwort eingeben"
+            name="this.dataService.editOldPasswordInput"
+            [(ngModel)]="this.dataService.editOldPasswordInput"
+            [class.error]="
+              this.dataService.emptyEditOldPasswordInput &&
+              !this.dataService.editOldPasswordInput
+            "
+          />
+          <button
+            type="button"
+            (click)="this.toggleEditeOldPasswordVisibility()"
+          >
+            <img
+              [src]="
+                this.dataService.editeOldPasswordVisible
+                  ? '/assets/icons/eye-slash.svg'
+                  : '/assets/icons/eye.svg'
+              "
+              alt="Toggle Password"
+              class="password-icon"
+            />
+          </button>
+        </div>
+
+        <div class="password-container">
+          <input
+            (input)="this.resetErrorNewPassword()"
+            [type]="this.dataService.editePasswordVisible ? 'text' : 'password'"
+            placeholder="Neues Passwort eingeben"
+            name="this.dataService.editNewPasswordInput"
+            [(ngModel)]="this.dataService.editNewPasswordInput"
+            [class.error]="
+              this.dataService.emptyEditNewPasswordInput &&
+              !this.dataService.editNewPasswordInput
+            "
+          />
+          <button type="button" (click)="this.toggleEditePasswordVisibility()">
+            <img
+              [src]="
+                this.dataService.editePasswordVisible
+                  ? '/assets/icons/eye-slash.svg'
+                  : '/assets/icons/eye.svg'
+              "
+              alt="Toggle Password"
+              class="password-icon"
+            />
+          </button>
+
+          <p
+            class="error-text-input"
+            *ngIf="this.dataService.emptyEditNewPasswordInput"
+          >
+            Neues Passwort eingeben.
+          </p>
+        </div>
+
+        <div class="password-container">
+          <input
+            (input)="this.resetErrorRepeatedPassword()"
+            [type]="
+              this.dataService.editeRepeatedPasswordVisible
+                ? 'text'
+                : 'password'
+            "
+            placeholder="Neues Passwort wiederholen"
+            name="this.dataService.editRepeatedPasswordInput"
+            [(ngModel)]="this.dataService.editRepeatedPasswordInput"
+            [class.error]="
+              this.dataService.emptyEditRepeatedPasswordInput &&
+              !this.dataService.editRepeatedPasswordInput
+            "
+          />
+          <button
+            type="button"
+            (click)="this.toggleEditeRepeatedPasswordVisibility()"
+          >
+            <img
+              [src]="
+                this.dataService.editeRepeatedPasswordVisible
+                  ? '/assets/icons/eye-slash.svg'
+                  : '/assets/icons/eye.svg'
+              "
+              alt="Toggle Password"
+              class="password-icon"
+            />
+          </button>
+
+          <p
+            class="error-text-input"
+            *ngIf="
+              this.dataService.emptyEditRepeatedPasswordInput ||
+              !this.dataService.preparedPasswordsMatch
+            "
+          >
+            Passwort stimmt nicht überein.
+          </p>
+        </div>
+        <button
+          [disabled]="
+            this.dataService.emptyEditOldPasswordInput ||
+            this.dataService.emptyEditNewPasswordInput ||
+            this.dataService.emptyEditRepeatedPasswordInput ||
+            !this.dataService.preparedPasswordsMatch ||
+            this.dataService.passwortEditeInputIsEmpty
+          "
+          [ngClass]="{
+            'submit-empty-button':
+              this.dataService.emptyEditOldPasswordInput ||
+              this.dataService.emptyEditNewPasswordInput ||
+              this.dataService.emptyEditRepeatedPasswordInput ||
+              !this.dataService.preparedPasswordsMatch ||
+              this.dataService.passwortEditeInputIsEmpty,
+            'submit-button':
+              !this.dataService.emptyEditOldPasswordInput &&
+              !this.dataService.emptyEditNewPasswordInput &&
+              !this.dataService.emptyEditRepeatedPasswordInput &&
+              this.dataService.preparedPasswordsMatch &&
+              !this.dataService.passwortEditeInputIsEmpty
+          }"
+          type="submit"
+        >
+          Speichern
+        </button>
+        <button
+          (click)="closeEditePassword()"
+          class="submit-button"
+          type="submit"
+        >
+          Abbrechen
+        </button>
       </div>
     </div>
 
