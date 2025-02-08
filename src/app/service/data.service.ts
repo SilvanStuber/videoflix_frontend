@@ -359,6 +359,9 @@ export class DataService {
     }
   }
 
+  /**
+  * Resets all boolean content states to their default values.
+  */
   resetBooleanOfConten() {
     this.mainContentIsActive = false;
     this.menuVisible = false;
@@ -368,6 +371,9 @@ export class DataService {
     this.editPasswordIsActive = false;
   }
 
+  /**
+  * Resets all edit-related content and password fields to default values.
+  */
   resetEditContent() {
     this.passwordResetVisible = false;
     this.passwordRepeatedResetVisible = false;
@@ -383,7 +389,5 @@ export class DataService {
     this.passwortEditeInputIsEmpty = false;
     this.preparedPasswordsMatch = false;
   }
-
-
 }
 

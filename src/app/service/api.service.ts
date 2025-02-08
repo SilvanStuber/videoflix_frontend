@@ -10,11 +10,9 @@ export class ApiService {
 
   constructor(public dataService: DataService) { }
 
-
-
   /**
- * Sends a login request to the API and processes the response.
- */
+  * Sends a login request to the API and processes the response.
+  */
   async loginOnApi() {
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}login/`, {
@@ -41,6 +39,9 @@ export class ApiService {
     }
   }
 
+  /**
+  * Sends a new password to the API for reset confirmation.
+  */
   async setNewPasswordOnApi() {
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}authentication/password_reset_confirm/${this.dataService.uid}/${this.dataService.token}/`, {
@@ -59,6 +60,9 @@ export class ApiService {
     }
   }
 
+  /**
+  * Saves the edited user data to the API using a PATCH request.
+  */
   async saveEditeUserOnAPI() {
     try {
       const response = await fetch(
@@ -79,9 +83,9 @@ export class ApiService {
   }
 
   /**
-* Processes the API response after saving a viewer and updates the viewer list.
-* Handles errors or resets to the viewer selection page on success.
-*/
+  * Processes the API response after saving a viewer and updates the viewer list.
+  * Handles errors or resets to the viewer selection page on success.
+  */
   async saveResponseDataUserPatch(response: Response) {
     const responseData: any = await response.json();
     if (!response.ok) {
@@ -99,9 +103,9 @@ export class ApiService {
 
 
   /**
-* Edit viewer to the API and processes the response.
-* Handles errors with a default error message.
-*/
+  * Edit viewer to the API and processes the response.
+  * Handles errors with a default error message.
+  */
   async saveViewer() {
     try {
       const response = await fetch(
@@ -176,6 +180,9 @@ export class ApiService {
     }
   }
 
+  /**
+  * Saves the new password to the API using a POST request.
+  */
   async savePasswortOnAPI() {
     try {
       const response = await fetch(`${this.dataService.API_BASE_URL}authentication/old_password_reset/`, {
@@ -197,6 +204,9 @@ export class ApiService {
     }
   }
 
+  /**
+  * Loads the edit user content and resets previous states.
+  */
   loadEditUserContentContent() {
     this.dataService.resetBooleanOfConten();
     this.dataService.resetEditContent();

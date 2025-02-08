@@ -2,14 +2,12 @@ import { Component, HostListener, ElementRef, ViewChild, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { DataService } from '../service/data.service';
-import { Viewer } from '../../assets/models/viewers.class';
 import { Video } from '../../assets/models/video.class';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../assets/models/user.class';
 import { ApiService } from '../service/api.service';
 @Component({
   selector: 'app-video-collection',
@@ -41,31 +39,48 @@ export class VideoCollectionComponent {
     this.loadVideo(10);
   }
 
+  /**
+  * Displays the menu by setting `menuVisible` to true.
+  */
   showMenu() {
     this.dataService.menuVisible = true;
   }
 
+  /**
+  * Hides the menu by setting `menuVisible` to false.
+  */
   hideMenu() {
     this.dataService.menuVisible = false;
   }
 
+  /**
+  * Navigates back to the main page with the viewer ID.
+  */
   backToMainPage() {
     this.router.navigate(['/video-collection', this.dataService.idViewer]);
   }
 
+  /**
+  * Opens the edit viewer mode and sets viewer details.
+  */
   editViewerOpen() {
     this.dataService.resetBooleanOfConten();
     this.dataService.viewername = this.dataService.singleViewer.viewername
     this.dataService.randomImgPath = String(this.dataService.singleViewer.picture_file);
     this.dataService.editViewerIsActive = true;
-
   }
 
+  /**
+  * Opens the edit user mode and resets content states.
+  */
   editUserOpen() {
     this.dataService.resetBooleanOfConten();
     this.dataService.editUserIsActive = true;
   }
 
+  /**
+  * Switches the viewer and loads the viewer page.
+  */
   switchViewer() {
     this.dataService.resetBooleanOfConten();
     this.dataService.mainContentIsActive = true;
@@ -98,6 +113,9 @@ export class VideoCollectionComponent {
     this.dataService.editeRepeatedPasswordVisible = !this.dataService.editeRepeatedPasswordVisible;
   }
 
+  /**
+  * Resets the error state for the old password input.
+  */
   resetErrorOldPassword() {
     if (this.dataService.editOldPasswordInput !== '') {
       this.dataService.emptyEditOldPasswordInput = false;
@@ -112,6 +130,9 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Resets the error state for the new password input.
+  */
   resetErrorNewPassword() {
     if (this.dataService.editNewPasswordInput !== '') {
       this.dataService.emptyEditNewPasswordInput = false;
@@ -126,6 +147,9 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Resets the error state for the repeated password input.
+  */
   resetErrorRepeatedPassword() {
     if (this.dataService.editRepeatedPasswordInput !== '') {
       this.dataService.emptyEditRepeatedPasswordInput = false;
@@ -145,12 +169,18 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Closes the password edit mode and resets content states.
+  */
   closeEditePassword() {
     this.dataService.resetBooleanOfConten();
     this.dataService.resetEditContent()
     this.dataService.editUserIsActive = true;
   }
 
+  /**
+  * Retrieves a video by its ID with authorization headers.
+  */
   getVideo(videoId: number): Observable<Video> {
     const headers = new HttpHeaders({
       'Authorization': `Token ${this.dataService.user.token}`
@@ -160,6 +190,9 @@ export class VideoCollectionComponent {
     );
   }
 
+  /**
+  * Loads a video by its ID and sets the selected resolution.
+  */
   loadVideo(videoId: number): void {
     this.getVideo(videoId).subscribe(video => {
       this.dataService.video = video;
@@ -173,8 +206,9 @@ export class VideoCollectionComponent {
     });
   }
 
-
-
+  /**
+  * Changes the video resolution and updates the selected URL.
+  */
   changeResolution(url: string) {
     this.dataService.selectedResolution = url.startsWith('http')
       ? url
@@ -182,6 +216,9 @@ export class VideoCollectionComponent {
     this.dataService.showSettingsMenu = false;
   }
 
+  /**
+  * Normalizes a URL by removing protocol and trailing slashes.
+  */
   normalizeUrl(url: string): string {
     if (!url) return '';
     let normalizedUrl = url.trim().replace(/^https?:\/\//, '');
@@ -191,8 +228,9 @@ export class VideoCollectionComponent {
     return normalizedUrl.replace(/\/$/, '');
   }
 
-
-
+  /**
+  * Closes the settings menu when clicking outside of it.
+  */
   @HostListener('document:click', ['$event'])
   closeMenuOnClickOutside(event: Event) {
     if (!event.target || !(event.target as HTMLElement).closest('.settings-container')) {
@@ -200,18 +238,30 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Toggles the visibility of the settings menu.
+  */
   toggleSettingsMenu() {
     this.dataService.showSettingsMenu = !this.dataService.showSettingsMenu;
   }
 
+  /**
+  * Hides the controls after a delay.
+  */
   hideControlsAfterDelay() {
     this.dataService.hideSettingsMenu = true;
   }
 
+  /**
+  * Shows the controls by setting the menu visibility to false.
+  */
   showControls() {
     this.dataService.hideSettingsMenu = false;
   }
 
+  /**
+  * Hides the controls if the video is playing and closes the settings menu if open.
+  */
   hideControls() {
     if (!this.videoPlayer.nativeElement.paused) {
       this.dataService.hideSettingsMenu = true;
@@ -222,6 +272,9 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Validates if the viewer's content has been edited.
+  */
   validatioContentEditViewer() {
     this.dataService.validationContent = false;
     if (this.dataService.viewername !== '') {
@@ -232,22 +285,27 @@ export class VideoCollectionComponent {
     if (this.dataService.randomImgPath !== this.dataService.singleViewer.picture_file) {
       this.dataService.validationContent = true;
     }
-
   }
 
+  /**
+  * Opens the username edit input and closes other edit inputs.
+  */
   openEditeInputUsername() {
     this.dataService.closeEditeInput();
     this.dataService.inputUserEditIsActive = true;
   }
 
+  /**
+  * Opens the email edit input and closes other edit inputs.
+  */
   openEditeInputEmail() {
     this.dataService.closeEditeInput();
     this.dataService.inputEmailEditIsActive = true;
   }
 
-
-
-
+  /**
+  * Validates if the user's content has been edited.
+  */
   validatioContentEditUser() {
     this.dataService.validationContentUser = false;
     if (this.dataService.userName !== '') {
@@ -262,6 +320,9 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Saves the edited user data if changes were made.
+  */
   saveEditUser() {
     if (this.dataService.validationContentUser) {
       if (this.dataService.userName === '') {
@@ -274,6 +335,9 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Saves the new password if all validation checks pass.
+  */
   saveNewPasswort() {
     if (!this.dataService.emptyEditOldPasswordInput &&
       !this.dataService.emptyEditNewPasswordInput &&
@@ -284,7 +348,9 @@ export class VideoCollectionComponent {
     }
   }
 
-
+  /**
+  * Saves the edited viewer data if changes were made.
+  */
   saveEditViewer() {
     if (this.dataService.validationContent) {
       this.apiService.saveViewer();
@@ -292,12 +358,13 @@ export class VideoCollectionComponent {
     }
   }
 
+  /**
+  * Closes the edit viewer mode and resets content states.
+  */
   closeEditViewer() {
     this.dataService.resetBooleanOfConten();
     this.dataService.validationContent = false;
     this.dataService.mainContentIsActive = true;
   }
-
-
 }
 
