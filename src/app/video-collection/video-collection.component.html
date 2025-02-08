@@ -202,7 +202,7 @@
       class="edite-password-container"
     >
       <div class="edite-password-content-container">
-        <div class="password-container">
+        <div class="edite-password-container-content">
           <input
             (input)="this.resetErrorOldPassword()"
             [type]="
@@ -232,7 +232,7 @@
           </button>
         </div>
 
-        <div class="password-container">
+        <div class="edite-password-container-content">
           <input
             (input)="this.resetErrorNewPassword()"
             [type]="this.dataService.editePasswordVisible ? 'text' : 'password'"
@@ -264,7 +264,7 @@
           </p>
         </div>
 
-        <div class="password-container">
+        <div class="edite-password-container-content">
           <input
             (input)="this.resetErrorRepeatedPassword()"
             [type]="
@@ -276,8 +276,10 @@
             name="this.dataService.editRepeatedPasswordInput"
             [(ngModel)]="this.dataService.editRepeatedPasswordInput"
             [class.error]="
-              this.dataService.emptyEditRepeatedPasswordInput &&
-              !this.dataService.editRepeatedPasswordInput
+              this.dataService.emptyEditRepeatedPasswordInput ||
+              (!this.dataService.preparedPasswordsMatch &&
+                this.dataService.editRepeatedPasswordInput !==
+                  this.dataService.editNewPasswordInput)
             "
           />
           <button
@@ -299,13 +301,16 @@
             class="error-text-input"
             *ngIf="
               this.dataService.emptyEditRepeatedPasswordInput ||
-              !this.dataService.preparedPasswordsMatch
+              (!this.dataService.preparedPasswordsMatch &&
+                this.dataService.editRepeatedPasswordInput !==
+                  this.dataService.editNewPasswordInput)
             "
           >
             Passwort stimmt nicht überein.
           </p>
         </div>
         <button
+          (click)="this.saveNewPasswort()"
           [disabled]="
             this.dataService.emptyEditOldPasswordInput ||
             this.dataService.emptyEditNewPasswordInput ||
@@ -332,12 +337,15 @@
           Speichern
         </button>
         <button
-          (click)="closeEditePassword()"
+          (click)="this.closeEditePassword()"
           class="submit-button"
           type="submit"
         >
           Abbrechen
         </button>
+        <p class="error-text-input" *ngIf="this.dataService.wrongData">
+          {{ this.dataService.wrongData }}
+        </p>
       </div>
     </div>
 
@@ -381,9 +389,7 @@
           Speichern
         </button>
         <button
-          [disabled]="
-            this.dataService.emptyViewername || this.dataService.inputIsEmty
-          "
+          (click)="this.closeEditViewer()"
           class="submit-button"
           type="submit"
         >

@@ -175,4 +175,31 @@ export class ApiService {
       this.dataService.wrongData = 'Keine Daten erhalten.';
     }
   }
+
+  async savePasswortOnAPI() {
+    try {
+      const response = await fetch(`${this.dataService.API_BASE_URL}authentication/old_password_reset/`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${this.dataService.user.token}`,
+        },
+        body: JSON.stringify({ old_password: this.dataService.editOldPasswordInput, password: this.dataService.editNewPasswordInput, repeated_password: this.dataService.editRepeatedPasswordInput }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        this.dataService.wrongData = errorData.detail;
+        return;
+      }
+      this.loadEditUserContentContent();
+    } catch (error) {
+      this.dataService.wrongData = 'Keine Daten erhalten.';
+    }
+  }
+
+  loadEditUserContentContent() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.resetEditContent();
+    this.dataService.editUserIsActive = true;
+  }
 }

@@ -20,8 +20,6 @@ import { ApiService } from '../service/api.service';
 })
 export class VideoCollectionComponent {
 
-
-
   @ViewChild('videoContainer') videoContainer!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
@@ -149,6 +147,7 @@ export class VideoCollectionComponent {
 
   closeEditePassword() {
     this.dataService.resetBooleanOfConten();
+    this.dataService.resetEditContent()
     this.dataService.editUserIsActive = true;
   }
 
@@ -275,7 +274,15 @@ export class VideoCollectionComponent {
     }
   }
 
-
+  saveNewPasswort() {
+    if (!this.dataService.emptyEditOldPasswordInput &&
+      !this.dataService.emptyEditNewPasswordInput &&
+      !this.dataService.emptyEditRepeatedPasswordInput &&
+      this.dataService.preparedPasswordsMatch &&
+      !this.dataService.passwortEditeInputIsEmpty) {
+      this.apiService.savePasswortOnAPI();
+    }
+  }
 
 
   saveEditViewer() {
@@ -283,6 +290,12 @@ export class VideoCollectionComponent {
       this.apiService.saveViewer();
       this.dataService.validationContent = false;
     }
+  }
+
+  closeEditViewer() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.validationContent = false;
+    this.dataService.mainContentIsActive = true;
   }
 
 

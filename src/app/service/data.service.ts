@@ -367,5 +367,23 @@ export class DataService {
     this.editUserIsActive = false;
     this.editPasswordIsActive = false;
   }
+
+  resetEditContent() {
+    this.passwordResetVisible = false;
+    this.passwordRepeatedResetVisible = false;
+    this.editeOldPasswordVisible = false;
+    this.editePasswordVisible = false;
+    this.editeRepeatedPasswordVisible = false;
+    this.editOldPasswordInput = '';
+    this.emptyEditOldPasswordInput = false;
+    this.editNewPasswordInput = '';
+    this.emptyEditNewPasswordInput = false;
+    this.editRepeatedPasswordInput = '';
+    this.emptyEditRepeatedPasswordInput = false;
+    this.passwortEditeInputIsEmpty = false;
+    this.preparedPasswordsMatch = false;
+  }
+
+
 }
 
