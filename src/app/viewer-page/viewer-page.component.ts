@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Viewer } from '../../assets/models/viewers.class';
+import { ApiService } from '../service/api.service';
 
 @Component({
   selector: 'app-viewer-page',
@@ -17,54 +18,14 @@ export class ViewerPageComponent {
   viewerSelectPageActive: boolean = true;
   addViewerPageActive: boolean = false;
 
-  constructor(public dataService: DataService, private router: Router) { }
+  constructor(public dataService: DataService, public apiService: ApiService, private router: Router) { }
 
   /**
   * Initializes the component by loading login data.
   */
   ngOnInit() {
-    this.dataService.isUserAuthenticated();
     this.dataService.loadUserFromLocalStorage()
-    this.loadViewerOnApi();
-  }
-
-  /**
-  * Loads viewer data from the API and saves the response.
-  * Handles errors by setting a default error message.
-  */
-  async loadViewerOnApi() {
-    try {
-      const response = await fetch(
-        `${this.dataService.API_BASE_URL}viewer/?user=${this.dataService.user.user}`,
-        {
-          method: "GET",
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${this.dataService.user.token}`,
-          },
-        }
-      );
-      this.saveDataLoadViewer(response);
-    } catch (error) {
-      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
-    }
-  }
-
-  /**
-  * Processes the API response, saves viewer data, or sets an error message.
-  * Converts valid response data into Viewer objects.
-  */
-  async saveDataLoadViewer(response: Response) {
-    const responseData: any = await response.json();
-    if (!response.ok) {
-      this.dataService.wrongData = responseData.error;
-      return;
-    }
-    if (responseData && Array.isArray(responseData)) {
-      this.dataService.viewers = responseData.map((viewer: any) => new Viewer(viewer));
-    } else {
-      this.dataService.wrongData = 'Keine Daten erhalten.';
-    }
+    this.apiService.loadViewerOnApi();
   }
 
   /**

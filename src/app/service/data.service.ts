@@ -61,6 +61,7 @@ export class DataService {
   inputEmailEditIsActive: boolean = false;
   mainContentIsActive: boolean = true;
   video: Video = new Video();
+  videoCollection: Video[] = [];
   selectedResolution: string = '';
   hideSettingsMenu: boolean = false;
   showSettingsMenu: boolean = false;
@@ -151,6 +152,8 @@ export class DataService {
     localStorage.removeItem('user');
     const checkInterval = setInterval(() => {
       if (!localStorage.getItem('user')) {
+        this.resetBooleanOfConten();
+        this.mainContentIsActive = true;
         clearInterval(checkInterval);
         this.router.navigate(['']);
       }

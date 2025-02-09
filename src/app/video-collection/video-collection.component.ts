@@ -34,7 +34,7 @@ export class VideoCollectionComponent {
     });
     this.dataService.loadUserFromLocalStorage();
     this.apiService.getViewerData();
-    this.videoService.loadVideo(10);
+    this.apiService.getVideoData();
   }
 
   /**
@@ -56,6 +56,14 @@ export class VideoCollectionComponent {
   */
   backToMainPage() {
     this.router.navigate(['/video-collection', this.dataService.idViewer]);
+  }
+
+  /**
+  * Navigates back to the video collection.
+  */
+  backToVodeioCollection() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.mainContentIsActive = true;
   }
 
   /**
@@ -85,6 +93,9 @@ export class VideoCollectionComponent {
     this.dataService.loadViwerPage()
   }
 
+  /**
+  * Opens the password edit mode and resets other content states.
+  */
   openEditePassword() {
     this.dataService.resetBooleanOfConten();
     this.dataService.editPasswordIsActive = true;

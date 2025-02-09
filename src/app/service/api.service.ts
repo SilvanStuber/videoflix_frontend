@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from '../service/data.service';
 import { Viewer } from '../../assets/models/viewers.class';
 import { User } from '../../assets/models/user.class';
+import { Video } from '../../assets/models/video.class';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,46 @@ export class ApiService {
       }
     } catch (error) {
       this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
+    }
+  }
+
+
+  /**
+  * Loads viewer data from the API and saves the response.
+  * Handles errors by setting a default error message.
+  */
+  async loadViewerOnApi() {
+    try {
+      const response = await fetch(
+        `${this.dataService.API_BASE_URL}viewer/?user=${this.dataService.user.user}`,
+        {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${this.dataService.user.token}`,
+          },
+        }
+      );
+      this.saveDataLoadViewer(response);
+    } catch (error) {
+      this.dataService.wrongData = 'Ein unbekannter Fehler ist aufgetreten';
+    }
+  }
+
+  /**
+  * Processes the API response, saves viewer data, or sets an error message.
+  * Converts valid response data into Viewer objects.
+  */
+  async saveDataLoadViewer(response: Response) {
+    const responseData: any = await response.json();
+    if (!response.ok) {
+      this.dataService.wrongData = responseData.error;
+      return;
+    }
+    if (responseData && Array.isArray(responseData)) {
+      this.dataService.viewers = responseData.map((viewer: any) => new Viewer(viewer));
+    } else {
+      this.dataService.wrongData = 'Keine Daten erhalten.';
     }
   }
 
@@ -164,6 +205,44 @@ export class ApiService {
       const responseData = await response.json();
       this.saveResponseDataViewerGet(responseData);
     } catch (error) {
+      this.dataService.wrongData = 'Keine Daten erhalten.';
+    }
+  }
+
+  /**
+  * Fetches video data from the API and handles the response or errors.
+  */
+  async getVideoData() {
+    try {
+      const response = await fetch(`${this.dataService.API_BASE_URL}videos/`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${this.dataService.user.token}`,
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        this.dataService.wrongData = errorData.error || 'Fehler beim Abrufen der Daten.';
+        return;
+      }
+      const responseData = await response.json();
+      this.saveResponseDataVideosGet(responseData);
+    } catch (error) {
+      this.dataService.wrongData = 'Keine Daten erhalten.';
+    }
+  }
+
+
+  /**
+  * Processes the API response after saving a viewer and updates the viewer list.
+  * Handles errors or resets to the viewer selection page on success.
+  */
+  saveResponseDataVideosGet(responseData: any) {
+    if (responseData) {
+      this.dataService.videoCollection = responseData.map((video: any) => new Video(video));
+      console.log("piojoiuioiop", this.dataService.videoCollection)
+    } else {
       this.dataService.wrongData = 'Keine Daten erhalten.';
     }
   }

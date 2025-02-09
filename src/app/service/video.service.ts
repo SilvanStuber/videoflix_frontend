@@ -12,9 +12,11 @@ export class VideoService {
 
   constructor(public dataService: DataService, private http: HttpClient) { }
 
+
+
   /**
-* Retrieves a video by its ID with authorization headers.
-*/
+  * Retrieves a video by its ID with authorization headers.
+  */
   getVideo(videoId: number): Observable<Video> {
     const headers = new HttpHeaders({
       'Authorization': `Token ${this.dataService.user.token}`
@@ -25,9 +27,10 @@ export class VideoService {
   }
 
   /**
-* Loads a video by its ID and sets the selected resolution.
-*/
+  * Loads a video by its ID and sets the selected resolution.
+  */
   loadVideo(videoId: number): void {
+    this.switchContentOfVideo();
     this.getVideo(videoId).subscribe(video => {
       this.dataService.video = video;
       const resolveUrl = (path: string) => path.startsWith('http') ? path : `${this.dataService.API_VIDEO_URL}${path}`;
@@ -38,5 +41,13 @@ export class VideoService {
     }, error => {
       console.error('Fehler beim Laden des Videos:', error);
     });
+  }
+
+  /**
+  * Switches the content to display the video.
+  */
+  switchContentOfVideo() {
+    this.dataService.resetBooleanOfConten();
+    this.dataService.showVideo = true;
   }
 }

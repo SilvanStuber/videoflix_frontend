@@ -2,7 +2,7 @@ export class Video {
     id: number;
     title: string;
     description: string;
-    created_at: string;
+    titel_picture_file: string;
     video_1080p: string;
     video_720p: string;
     video_480p: string;
@@ -13,7 +13,7 @@ export class Video {
         this.id = obj?.id || 0;
         this.title = obj?.title || '';
         this.description = obj?.description || '';
-        this.created_at = obj?.created_at || '';
+        this.titel_picture_file = obj?.titel_picture_file || '';
         this.video_1080p = obj?.video_file || '';
         this.video_720p = obj?.video_720p || '';
         this.video_480p = obj?.video_480p || '';
@@ -30,7 +30,7 @@ export class Video {
             id: this.id,
             title: this.title,
             description: this.description,
-            created_at: this.created_at,
+            created_at: this.titel_picture_file,
             video_file: this.video_1080p,
             video_720p: this.video_720p,
             video_480p: this.video_480p

@@ -6,6 +6,7 @@
   background-color: $background-black;
   height: 100vh;
   width: 100vw;
+  overflow-x: hidden;
 
   > header {
     height: 120px;
@@ -36,7 +37,7 @@
   right: 48px;
   max-height: 400px;
   width: 300px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.9);
   border: 1px solid $gray;
 }
 
@@ -99,8 +100,23 @@
 
 .settings-container {
   position: absolute;
-  bottom: 28px;
-  right: 212px;
+  top: 28px;
+  right: 28px;
+  color: white;
+  border-radius: 50%;
+  padding: 14px;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0s ease;
+  font-size: 32px;
+}
+
+.back-arrow-video-container {
+  position: absolute;
+  top: 28px;
+  left: 28px;
   color: white;
   border-radius: 50%;
   padding: 10px;
@@ -109,7 +125,13 @@
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease, visibility 0s ease;
-  font-size: 28px;
+  height: 28px;
+  width: 28px;
+  border-radius: 100%;
+}
+
+.back-arrow-video-container:hover {
+  background-color: rgb(79, 78, 77, 0.5);
 }
 
 .settings-container.hidden {
@@ -118,21 +140,29 @@
   transition: opacity 0.3s ease 0s, visibility 0.1s ease 0s;
 }
 
+.back-arrow-video-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease 0s, visibility 0.1s ease 0s;
+}
+
 .video-container:hover .settings-container,
 .settings-container:hover,
+.back-arrow-video-container,
+.back-arrow-video-container:hover,
 .settings-menu {
   opacity: 1 !important;
   visibility: visible !important;
 }
 
 .settings-container:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgb(79, 78, 77, 0.5);
 }
 
 .settings-menu {
   position: absolute;
-  bottom: 80px;
-  right: 218px;
+  top: 100px;
+  right: 40px;
   background: rgba(0, 0, 0, 0.8);
   color: white;
   border-radius: 5px;
@@ -282,16 +312,43 @@
   padding-bottom: 30px;
 }
 
+.video-collection-content-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 24px;
+  gap: 24px;
+  background-color: $background-black;
+}
+
+.single-video-collection {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+  color: $white;
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  > img {
+    width: 300px;
+    height: 200px;
+  }
+}
+
+.single-video-collection:hover {
+  transform: scale(1.1);
+}
+
 @media (max-width: 1440px) {
   .settings-container {
-    right: 142px;
-    bottom: 26px;
     font-size: 18px;
   }
 
   .settings-menu {
-    bottom: 60px;
-    right: 142px;
+    top: 74px;
   }
 }
 
@@ -359,5 +416,12 @@
     width: 180px;
     height: 14px;
     font-size: 12px;
+  }
+
+  .single-video-collection {
+    > img {
+      width: 250px;
+      height: 125px;
+    }
   }
 }

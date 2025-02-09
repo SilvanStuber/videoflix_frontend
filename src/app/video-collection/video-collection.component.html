@@ -42,8 +42,21 @@
   </div>
 
   <div (mouseenter)="hideMenu()" class="video-content-container">
-    <div>
-      <h1 *ngIf="this.dataService.mainContentIsActive">Test MAIN</h1>
+    <div
+      *ngIf="this.dataService.mainContentIsActive"
+      class="video-collection-content-container"
+    >
+      <div
+        *ngFor="let video of dataService.videoCollection"
+        class="single-video-collection"
+        (click)="this.videoService.loadVideo(video.id)"
+      >
+        <img
+          [src]="dataService.API_VIDEO_URL + video.titel_picture_file"
+          alt="single video picture"
+        />
+        <span>{{ video.title }}</span>
+      </div>
     </div>
 
     <div *ngIf="this.dataService.editUserIsActive" class="edit-user-container">
@@ -194,6 +207,13 @@
             alt="pen picture"
           />
         </div>
+        <button
+          (click)="this.closeEditViewer()"
+          class="submit-button"
+          type="submit"
+        >
+          Abbrechen
+        </button>
       </div>
     </div>
 
@@ -402,8 +422,8 @@
       *ngIf="this.dataService.showVideo"
       #videoContainer
       class="video-container"
-      (mouseenter)="showControls()"
-      (mouseleave)="hideControls()"
+      (mouseenter)="this.showControls()"
+      (mouseleave)="this.hideControls()"
     >
       <video
         #videoPlayer
@@ -411,6 +431,12 @@
         controls
         (play)="hideControlsAfterDelay()"
       ></video>
+      <img
+        class="back-arrow-video-container"
+        [class.hidden]="this.dataService.hideSettingsMenu"
+        (click)="this.backToVodeioCollection()"
+        src="/assets/img/gray-arrow.png"
+      />
       <div
         class="settings-container"
         [class.hidden]="this.dataService.hideSettingsMenu"
