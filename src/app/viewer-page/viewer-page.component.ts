@@ -23,6 +23,7 @@ export class ViewerPageComponent {
   * Initializes the component by loading login data.
   */
   ngOnInit() {
+    this.dataService.isUserAuthenticated();
     this.dataService.loadUserFromLocalStorage()
     this.loadViewerOnApi();
   }

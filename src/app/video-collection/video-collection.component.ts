@@ -2,13 +2,10 @@ import { Component, HostListener, ElementRef, ViewChild, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { DataService } from '../service/data.service';
-import { Video } from '../../assets/models/video.class';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../service/api.service';
+import { VideoService } from '../service/video.service';
 @Component({
   selector: 'app-video-collection',
   standalone: true,
@@ -21,13 +18,14 @@ export class VideoCollectionComponent {
   @ViewChild('videoContainer') videoContainer!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
 
-  constructor(public dataService: DataService, public apiService: ApiService, private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
+  constructor(public dataService: DataService, public apiService: ApiService, public videoService: VideoService, private route: ActivatedRoute, private router: Router) { }
 
   /**
   * Initializes the component, retrieves the viewer ID from the route, 
   * loads the user from local storage, and fetches viewer data.
   */
   ngOnInit(): void {
+    this.dataService.isUserAuthenticated();
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
@@ -36,7 +34,7 @@ export class VideoCollectionComponent {
     });
     this.dataService.loadUserFromLocalStorage();
     this.apiService.getViewerData();
-    this.loadVideo(10);
+    this.videoService.loadVideo(10);
   }
 
   /**
@@ -176,34 +174,6 @@ export class VideoCollectionComponent {
     this.dataService.resetBooleanOfConten();
     this.dataService.resetEditContent()
     this.dataService.editUserIsActive = true;
-  }
-
-  /**
-  * Retrieves a video by its ID with authorization headers.
-  */
-  getVideo(videoId: number): Observable<Video> {
-    const headers = new HttpHeaders({
-      'Authorization': `Token ${this.dataService.user.token}`
-    });
-    return this.http.get(`${this.dataService.API_BASE_URL}videos/single-video/${videoId}/`, { headers }).pipe(
-      map(data => new Video(data)),
-    );
-  }
-
-  /**
-  * Loads a video by its ID and sets the selected resolution.
-  */
-  loadVideo(videoId: number): void {
-    this.getVideo(videoId).subscribe(video => {
-      this.dataService.video = video;
-      const resolveUrl = (path: string) => path.startsWith('http') ? path : `${this.dataService.API_VIDEO_URL}${path}`;
-      this.dataService.selectedResolution =
-        resolveUrl(video.video_480p) ||
-        resolveUrl(video.video_720p) ||
-        resolveUrl(video.video_1080p);
-    }, error => {
-      console.error('Fehler beim Laden des Videos:', error);
-    });
   }
 
   /**

@@ -59,7 +59,7 @@ export class DataService {
   idViewer!: number;
   inputUserEditIsActive: boolean = false;
   inputEmailEditIsActive: boolean = false;
-  mainContentIsActive: boolean = false;
+  mainContentIsActive: boolean = true;
   video: Video = new Video();
   selectedResolution: string = '';
   hideSettingsMenu: boolean = false;
@@ -70,7 +70,7 @@ export class DataService {
   validationContent: boolean = false;
   validationContentUser: boolean = false;
   editUserIsActive: boolean = false;
-  editPasswordIsActive: boolean = true;
+  editPasswordIsActive: boolean = false;
   uid: string | null = null;
   token: string | null = null;
   repeatedPassword: string = '';
@@ -120,6 +120,41 @@ export class DataService {
   */
   loadMainPage() {
     this.router.navigate(['']);
+  }
+
+  /**
+  * Checks if the user is authenticated and navigates accordingly.
+  */
+  isLoginUserAuthenticated() {
+    this.loadUserFromLocalStorage()
+    if (localStorage.getItem('user')) {
+      this.loadViwerPage();
+    } else {
+      this.router.navigate(['']);
+    }
+  }
+
+  /**
+  * Checks if the user is authenticated and redirects if not.
+  */
+  isUserAuthenticated() {
+    this.loadUserFromLocalStorage()
+    if (!localStorage.getItem('user')) {
+      this.router.navigate(['']);
+    }
+  }
+
+  /**
+  * Logs out the user by removing stored data and navigating to the home page.
+  */
+  async logOut() {
+    localStorage.removeItem('user');
+    const checkInterval = setInterval(() => {
+      if (!localStorage.getItem('user')) {
+        clearInterval(checkInterval);
+        this.router.navigate(['']);
+      }
+    }, 50);
   }
 
   /**
@@ -191,7 +226,6 @@ export class DataService {
   * Saves the authenticated user data to local storage.
   */
   saveUserToLocalStorage() {
-    console.log("fkfkpfokpkfkf", this.user)
     localStorage.setItem('user', JSON.stringify({
       token: this.user.token,
       user: this.user.user,
@@ -208,20 +242,14 @@ export class DataService {
   loadUserFromLocalStorage() {
     const userData = localStorage.getItem('user');
     if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        this.user = new User();
-        this.user.token = parsedUser.token || '';
-        this.user.user = parsedUser.user || '';
-        this.user.username = parsedUser.username || '';
-        this.user.first_name = parsedUser.first_name || '';
-        this.user.last_name = parsedUser.last_name || '';
-        this.user.email = parsedUser.email || '';
-      } catch (error) {
-        console.error('Error parsing user data from local storage:', error);
-      }
-    } else {
-      console.warn('No user data found in local storage.');
+      const parsedUser = JSON.parse(userData);
+      this.user = new User();
+      this.user.token = parsedUser.token || '';
+      this.user.user = parsedUser.user || '';
+      this.user.username = parsedUser.username || '';
+      this.user.first_name = parsedUser.first_name || '';
+      this.user.last_name = parsedUser.last_name || '';
+      this.user.email = parsedUser.email || '';
     }
   }
 

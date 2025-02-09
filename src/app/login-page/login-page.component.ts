@@ -22,6 +22,7 @@ export class LoginPageComponent {
    */
   ngOnInit() {
     this.loadLoginData();
+    this.dataService.isLoginUserAuthenticated();
   }
 
   /**
