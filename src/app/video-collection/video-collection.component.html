@@ -239,6 +239,7 @@
           <button
             type="button"
             (click)="this.toggleEditeOldPasswordVisibility()"
+            tabindex="-1"
           >
             <img
               [src]="
@@ -264,7 +265,11 @@
               !this.dataService.editNewPasswordInput
             "
           />
-          <button type="button" (click)="this.toggleEditePasswordVisibility()">
+          <button
+            type="button"
+            (click)="this.toggleEditePasswordVisibility()"
+            tabindex="-1"
+          >
             <img
               [src]="
                 this.dataService.editePasswordVisible
@@ -305,6 +310,7 @@
           <button
             type="button"
             (click)="this.toggleEditeRepeatedPasswordVisibility()"
+            tabindex="-1"
           >
             <img
               [src]="

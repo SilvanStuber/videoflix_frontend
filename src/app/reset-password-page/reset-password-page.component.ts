@@ -13,7 +13,7 @@ import { ApiService } from '../service/api.service';
   styleUrl: './reset-password-page.component.scss'
 })
 export class ResetPasswordPageComponent {
-
+  input: boolean = false;
 
   constructor(private route: ActivatedRoute, public apiService: ApiService, public dataService: DataService,) { }
 
@@ -40,11 +40,26 @@ export class ResetPasswordPageComponent {
 
 
   resetErrorPassword() {
-    this.dataService.emptyPassword = false;
+    this.input = true;
+    if (this.dataService.password !== '') {
+      this.dataService.emptyPassword = false;
+    } else {
+      this.dataService.emptyPassword = true;
+    }
+    if (this.dataService.repeatedPassword === this.dataService.password) {
+      this.dataService.emptyRepeatedPassword = false;
+    } else {
+      this.dataService.emptyRepeatedPassword = true;
+    }
   }
 
   resetErrorRepeatedPassword() {
-    this.dataService.emptyPassword = false;
+    this.input = true;
+    if (this.dataService.repeatedPassword === this.dataService.password) {
+      this.dataService.emptyRepeatedPassword = false;
+    } else {
+      this.dataService.emptyRepeatedPassword = true;
+    }
   }
 
   toggleResetPasswordVisibility() {
