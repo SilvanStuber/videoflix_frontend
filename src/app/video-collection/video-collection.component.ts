@@ -154,6 +154,7 @@ export class VideoCollectionComponent {
       this.dataService.passwortEditeInputIsEmpty = true;
       this.dataService.emptyEditNewPasswordInput = true;
     }
+    this.comparePasswords();
   }
 
   /**
@@ -167,14 +168,21 @@ export class VideoCollectionComponent {
       } else {
         this.dataService.passwortEditeInputIsEmpty = true;
       }
-      if (this.dataService.editNewPasswordInput === this.dataService.editRepeatedPasswordInput) {
-        this.dataService.preparedPasswordsMatch = true;
-      } else {
-        this.dataService.preparedPasswordsMatch = false;
-      }
     } else {
       this.dataService.passwortEditeInputIsEmpty = true;
       this.dataService.emptyEditRepeatedPasswordInput = true;
+    }
+    this.comparePasswords();
+  }
+
+  /**
+  * Compares the passwords
+  */
+  comparePasswords() {
+    if (this.dataService.editNewPasswordInput === this.dataService.editRepeatedPasswordInput) {
+      this.dataService.preparedPasswordsMatch = true;
+    } else {
+      this.dataService.preparedPasswordsMatch = false;
     }
   }
 
