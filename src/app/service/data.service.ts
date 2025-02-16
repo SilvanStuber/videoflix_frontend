@@ -9,8 +9,8 @@ import { Video } from '../../assets/models/video.class';
   providedIn: 'root'
 })
 export class DataService {
-  API_BASE_URL = 'http://127.0.0.1:8000/api/';
-  API_VIDEO_URL = 'http://127.0.0.1:8000';
+  API_BASE_URL = ' https://gc.silvanstuber.ch/videoflix/api/';
+  API_VIDEO_URL = ' https://gc.silvanstuber.ch/videoflix';
   firstName: string = '';
   lastName: string = '';
   userName: string = '';
