@@ -9,8 +9,8 @@ import { Video } from '../../assets/models/video.class';
   providedIn: 'root'
 })
 export class DataService {
-  API_BASE_URL = ' https://gc.silvanstuber.ch/videoflix/api/';
-  API_VIDEO_URL = ' https://gc.silvanstuber.ch/videoflix';
+  API_BASE_URL = ' https://gc.silvanstuber.ch/videoflix_backend/api/';
+  API_VIDEO_URL = ' https://gc.silvanstuber.ch/videoflix_backend';
   firstName: string = '';
   lastName: string = '';
   userName: string = '';
