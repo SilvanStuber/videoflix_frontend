@@ -203,7 +203,10 @@ export class DataService {
   * Loads the imprint page by updating the application state.
   */
   loadImprintPage() {
-    this.saveLoadedPage();
+    if (!this.imprintPagePasswordActive &&
+      !this.privacyPolicyPagePasswordActive) {
+      this.saveLoadedPage();
+    }
     this.resetBooleanOfContent();
     this.imprintPagePasswordActive = true;
   }
@@ -212,7 +215,10 @@ export class DataService {
   * Loads the privacy policy page by updating the application state.
   */
   loadPrivacyPolicyPage() {
-    this.saveLoadedPage();
+    if (!this.imprintPagePasswordActive &&
+      !this.privacyPolicyPagePasswordActive) {
+      this.saveLoadedPage();
+    }
     this.resetBooleanOfContent();
     this.privacyPolicyPagePasswordActive = true;
   }
